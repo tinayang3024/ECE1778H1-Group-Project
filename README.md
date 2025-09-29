@@ -3,7 +3,7 @@
 ## Team Members
 
 - Dingyu Yang (1003802183 | dingyu.yang@mail.utoronto.ca) 
-- Renli Zhang (? | ?o@mail.utoronto.ca)
+- Renli Zhang (1005828339 | renli.zhang@mail.utoronto.ca)
 
 ## Motivation
 
