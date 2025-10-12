@@ -22,9 +22,18 @@ The Recipe Mobile App is designed for convenience and engagement, featuring an i
 Some of the key features provided by the app include:
 
 * Integration with external recipe backend APIs to deliver a wide variety of worldwide recipes from external databases directly to users within the app (e.g., [TheMealDB](https://www.themealdb.com/api.php)).
-* <todo: to be added by Renli>
+* Allows user-defined custom recipe and includes a Save Recipe button that stores the recipe locally via Async Storage.
+* Displaying the complete information of a select recipe on the Recipe Detail Screen, and includes a functionality for users to like recipe (stores it locally to user's liked list) using Async Storage for persistent data storage across app.
+* Displaying of the user's saved/liked recipes list on the User Collection Screen.
+* Integration with Expo Notifications to provide a daily reminder around dinner time for users to explore the recipes, encouraging user engagements with the app.
+* Deployment using Expo EAS Build to enable testing the app for both iOS and Android without requiring local setups.
 
-### Page Layout
+#### Navigation Structure
+Expo Router is chosen over React Navigation for this project because its file-based routing reduces boilerplate, simplifies dynamic route handling, and integrates seamlessly with Expo and TypeScript, making it easier to maintain and scale for a project of this size. The approach ensures type-safe route parameters, predictable screen transitions, and a highly organized project structure, improving both developer experience and code readability.
+
+The app uses Expo Router to implement navigation, leveraging its file-based routing system for a clean and organized project structure. Each main screen is represented as a file under the main `app/` directory, such as `app/Login.tsx`, `app/Home.tsx`, `app/AddRecipe.tsx`, `app/RecipeDetails/[id].tsx`, and `app/UserCollection.tsx`. Dynamic routes, like `[id].tsx`, enable passing data (e.g., recipe IDs) directly via the URL to display detailed information for a selected recipe. Shared layouts can be defined in `app/_layout.tsx` to include common UI elements such as headers, footers, or navigation bars across multiple screens, ensuring a consistent look and feel.
+
+#### Page Layout
 
 The app UI is organized into five main screens, each with distinct features:
 
@@ -72,6 +81,16 @@ The app UI is organized into five main screens, each with distinct features:
   * Optional: If supported by OAuth, display basic user details (e.g., profile photo, username, email)
   * A button to return to Home Screen
 
+#### State Management and Persistence
+The app manages its state using a combination of React Context API and the useReducer hook, providing a structured yet lightweight solution for handling module-level or medium-complexity state such as user preferences, theme settings, and recipe collections. Context is primarily used as a dependency injection mechanism, allowing shared data and functions to be accessed throughout the app without excessive prop drilling. This approach is effective for moderate data flows but may not scale efficiently for very large or frequently updated global states.
+Data persistence is achieved through React Native Async Storage, ensuring that important user data—such as saved recipes, liked items, and user preferences—remains available across app restarts. This enhances user experience by maintaining continuity even when the app is closed or restarted, without the need for a backend database.
+
+#### Notification
+The app integrates Expo Notifications to provide a daily local reminder that encourages user engagement. A scheduled notification is configured to trigger once per day at approximately 6:00 PM, reminding users to open the app and get inspired with a new recipe idea for dinner. The notification system leverages Expo’s notification scheduling API, which allows the app to register notifications locally on the device without requiring a backend service. Additionally, the implementation includes user interaction handling, ensuring that when a user taps on a notification, the app navigates to the Home Screen (or another relevant page) to display new or featured recipes. Permissions for notifications are requested during the app’s initial launch, and scheduling is managed through an asynchronous setup using Expo’s `Notifications.scheduleNotificationAsync()` API.
+
+#### Deployment with Expo EAS Build
+The app will be built and deployed using Expo EAS Build, which provides a cloud-based continuous integration and delivery (CI/CD) workflow for React Native projects. During development, the app will be tested locally through Expo Go and on the iOS emulator to verify UI responsiveness and core functionality. Once stable, EAS Build will be used to generate standalone `.ipa` and `.apk` files for testing on physical devices.
+The project will use EAS CLI commands such as `eas build --platform ios` for production builds, with configuration managed in the `eas.json` file. The final workable test builds will be attached as part of the final project submission. This approach ensures smooth testing, validation, and iteration before final submission.
 
 ### Advanced Features
 
@@ -85,6 +104,8 @@ The app will implement OAuth-based social logins (e.g., Google, Facebook, GitHub
 
 The Recipe Mobile App will also enable recipe sharing through Expo’s `Sharing` API, letting users send recipe details (title, instructions, and links) directly to social media or messaging apps. With one tap, users can share a favorite dish with friends or family, making cooking a social and collaborative activity. This feature not only improves user engagement but also helps promote the app organically as recipes are shared across different platforms.
 
+### Discussion
+The implemented features — including the recipe browsing and creation, detailed recipe views, user collection management, local persistence with Async Storage, daily notifications, Expo Router-based navigation, and the two advanced features of OAuth-based login and social sharing — collectively satisfy the course project requirements by demonstrating core mobile app front end development skills, state management, and user interaction design. The project scope is well-defined and moderate, focusing on five primary screens and key functionalities that are achievable within the 8-week timeframe, allowing sufficient time for design, implementation, testing, and iteration. By leveraging Expo Router for file-based navigation, React Context and Async Storage for state and persistence, and Expo Notifications for user engagement, the project balances feature richness with development feasibility, ensuring a polished and functional app by the course deadline.
 
 ## Tentative Plan
 
