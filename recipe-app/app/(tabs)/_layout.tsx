@@ -20,12 +20,19 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index" // filename without the extension
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="view-dashboard-outline" size={TAB_ICON_SIZE} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="view-dashboard-outline"
+              size={TAB_ICON_SIZE}
+              color={color}
+            />
+          ),
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -46,7 +53,30 @@ export default function TabLayout() {
         name="personal"
         options={{
           title: 'Personal',
-          tabBarIcon: ({ color }) => <MaterialIcons name="account-circle" size={TAB_ICON_SIZE} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="account-circle" size={TAB_ICON_SIZE} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="recipeDetails"
+        options={{
+          href: null,
+          title: 'Recipe Details',
+        }}
+      />
+      <Tabs.Screen
+        name="newRecipe"
+        options={{
+          href: null,
+          title: 'New Recipe',
+        }}
+      />
+      <Tabs.Screen
+        name="personalCollection"
+        options={{
+          href: null,
+          title: 'Personal Collection',
         }}
       />
     </Tabs>

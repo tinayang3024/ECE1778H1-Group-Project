@@ -1,14 +1,22 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import { useRouter } from 'expo-router';
 
 export default function TabDashboardScreen() {
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dashboard</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <View>
+        <Button title="Go to Recipe Details" onPress={() => router.push('/(tabs)/recipeDetails')} />
+      </View>
+      <View>
+        <Button title="Go to New Recipe" onPress={() => router.push('/(tabs)/newRecipe')} />
+      </View>
     </View>
   );
 }

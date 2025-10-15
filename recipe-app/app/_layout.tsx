@@ -1,59 +1,34 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+// import { Stack } from "expo-router";
+// import { AuthProvider, useAuth } from "../contexts/AuthContext";
+// import React from "react";
 
-import { useColorScheme } from '@/components/useColorScheme';
+// export default function RootLayout() {
+//   return (
+//     <AuthProvider>
+//       <Stack screenOptions={{ headerShown: false }} />
+//     </AuthProvider>
+//   );
+// }
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+import { Stack, Redirect } from 'expo-router';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import React from 'react';
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+function RootNavigation() {
+  const { isLoggedIn } = useAuth();
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
+  if (!isLoggedIn) {
+    return <Redirect href="/login" />;
   }
 
-  return <RootLayoutNav />;
+  return <Redirect href="/(tabs)" />;
 }
 
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
+export default function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <AuthProvider>
+      <RootNavigation />
+      <Stack screenOptions={{ headerShown: false }} />
+    </AuthProvider>
   );
 }
