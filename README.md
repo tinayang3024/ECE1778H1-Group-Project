@@ -129,12 +129,10 @@ The app will implement OAuth-based social logins (e.g., Google, Facebook, GitHub
 The Recipe Mobile App will also enable recipe sharing through Expo’s `Sharing` API, letting users send recipe details (title, instructions, and links) directly to social media or messaging apps. With one tap, users can share a favorite dish with friends or family, making cooking a social and collaborative activity. This feature not only improves user engagement but also helps promote the app organically as recipes are shared across different platforms.
 
 
----
-
-### Timeline Discussion
+#### Timeline Discussion
 The above listed features — including the recipe browsing and creation, detailed recipe views, user collection management, local persistence with Async Storage, daily notifications, Expo Router-based navigation, and the two advanced features of OAuth-based login and social sharing — collectively satisfy the course project requirements by demonstrating core mobile app front end development skills, state management, and user interaction design. The project scope is well-defined and moderate, focusing on five primary screens and key functionalities that are achievable within the 8-week timeframe, allowing sufficient time for design, implementation, testing, and iteration. By leveraging Expo Router for file-based navigation, React Context and Async Storage for state and persistence, and Expo Notifications for user engagement, the project balances feature richness with development feasibility, ensuring a polished and functional app by the course deadline.
 
-#### Tentative Plan
+## Tentative Plan
 
 The following table presents a tentative plan for the development of the Recipe Mobile App, assuming a total project timeline of approximately 2 months (8 weeks). The schedule outlines key phases, tasks, estimated effort, and assigned owners for each component of the project. 
 
