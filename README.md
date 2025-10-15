@@ -42,14 +42,14 @@ The app UI is organized into five main screens, each with distinct features:
   * OAuth-based login through supported third-party providers (e.g., Google)
   * Redirects to Home Screen after successful login
 
-* **Home Screen**
+* **Dashboard Screen**
 
   * Displays a featured recipe list fetched from a public API
   * Each recipe card is clickable to view the full recipe details
   * A button to `add new recipe`
   * A button to `view collection`
 
-* **Add Recipe Screen**
+* **New Recipe Screen**
 
   * Redirects from the `add new recipe` button on the Home Screen
   * Input fields for entering recipe details including:
@@ -81,6 +81,12 @@ The app UI is organized into five main screens, each with distinct features:
   * Optional: If supported by OAuth, display basic user details (e.g., profile photo, username, email)
   * A button to return to Home Screen
 
+* **Personal Profile Screen**
+
+  * Displays the user’s personal information after login
+  * Shows total number of collected recipes
+  * Includes a button to `view collection`, routing to the **User Collection Screen**
+
 #### State Management and Persistence
 The app manages its state using a combination of React Context API and the useReducer hook, providing a structured yet lightweight solution for handling module-level or medium-complexity state such as user preferences, theme settings, and recipe collections. Context is primarily used as a dependency injection mechanism, allowing shared data and functions to be accessed throughout the app without excessive prop drilling. This approach is effective for moderate data flows but may not scale efficiently for very large or frequently updated global states.
 Data persistence is achieved through React Native Async Storage, ensuring that important user data—such as saved recipes, liked items, and user preferences—remains available across app restarts. This enhances user experience by maintaining continuity even when the app is closed or restarted, without the need for a backend database.
@@ -88,26 +94,33 @@ Data persistence is achieved through React Native Async Storage, ensuring that i
 #### Notification
 The app integrates Expo Notifications to provide a daily local reminder that encourages user engagement. A scheduled notification is configured to trigger once per day at approximately 6:00 PM, reminding users to open the app and get inspired with a new recipe idea for dinner. The notification system leverages Expo’s notification scheduling API, which allows the app to register notifications locally on the device without requiring a backend service. Additionally, the implementation includes user interaction handling, ensuring that when a user taps on a notification, the app navigates to the Home Screen (or another relevant page) to display new or featured recipes. Permissions for notifications are requested during the app’s initial launch, and scheduling is managed through an asynchronous setup using Expo’s `Notifications.scheduleNotificationAsync()` API.
 
+#### Backend Integration
+
+The app integrates with external recipe backend APIs to provide users with a diverse collection of recipes from global databases, primarily through [TheMealDB](https://www.themealdb.com/api.php). This API delivers comprehensive recipe data, including category (e.g., Dessert), area (e.g., British), title (e.g., Apple Frangipan Tart), detailed cooking instructions, ingredient lists, and corresponding measurements. The backend responses are parsed and processed into a structured list of class-based recipe objects, ensuring consistent data handling across the app. These objects are rendered dynamically on the Dashboard (Home) Screen, allowing users to explore and interact with the curated recipe collection. The same shared list will also be leveraged on the User Collection Screen to retrieve and display any recipes the user has liked or saved.
+
 #### Deployment with Expo EAS Build
 The app will be built and deployed using Expo EAS Build, which provides a cloud-based continuous integration and delivery (CI/CD) workflow for React Native projects. During development, the app will be tested locally through Expo Go and on the iOS emulator to verify UI responsiveness and core functionality. Once stable, EAS Build will be used to generate standalone `.ipa` and `.apk` files for testing on physical devices.
 The project will use EAS CLI commands such as `eas build --platform ios` for production builds, with configuration managed in the `eas.json` file. The final workable test builds will be attached as part of the final project submission. This approach ensures smooth testing, validation, and iteration before final submission.
 
-### Advanced Features
+#### Advanced Features
 
 Other than the core features provided by the Recipe Mobile App, there are two advanced features worth highlighting: user authentication with OAuth social login, and recipe sharing through social platforms.
 
-#### User Authentication
+##### User Authentication
 
 The app will implement OAuth-based social logins (e.g., Google, Facebook, GitHub) using Expo’s `AuthSession`, allowing users to sign in securely without creating a separate password. After authentication, the provider issues an access token that the app stores to identify the user and load their personal data, such as collections or liked recipes. Logging out invalidates the token and redirects back to the login page. This approach simplifies onboarding, increases security, and ensures users enjoy a personalized experience.
 
-#### Social Sharing
+##### Social Sharing
 
 The Recipe Mobile App will also enable recipe sharing through Expo’s `Sharing` API, letting users send recipe details (title, instructions, and links) directly to social media or messaging apps. With one tap, users can share a favorite dish with friends or family, making cooking a social and collaborative activity. This feature not only improves user engagement but also helps promote the app organically as recipes are shared across different platforms.
 
-### Discussion
+
+---
+
+### Timeline Discussion
 The implemented features — including the recipe browsing and creation, detailed recipe views, user collection management, local persistence with Async Storage, daily notifications, Expo Router-based navigation, and the two advanced features of OAuth-based login and social sharing — collectively satisfy the course project requirements by demonstrating core mobile app front end development skills, state management, and user interaction design. The project scope is well-defined and moderate, focusing on five primary screens and key functionalities that are achievable within the 8-week timeframe, allowing sufficient time for design, implementation, testing, and iteration. By leveraging Expo Router for file-based navigation, React Context and Async Storage for state and persistence, and Expo Notifications for user engagement, the project balances feature richness with development feasibility, ensuring a polished and functional app by the course deadline.
 
-## Tentative Plan
+#### Tentative Plan
 
 The following table presents a tentative plan for the development of the Recipe Mobile App, assuming a total project timeline of approximately 2 months (8 weeks). The schedule outlines key phases, tasks, estimated effort, and assigned owners for each component of the project. 
 
