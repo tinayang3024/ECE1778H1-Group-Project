@@ -1,33 +1,69 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, Button, ScrollView } from 'react-native';
+import { useRouter } from 'expo-router';
 
+// Simple in-memory form for creating a recipe. This is intentionally lightweight and
+// uses local component state. Integrate with backend / context once available.
+// TODO: replace with form validation, image upload, and API persistence.
 export default function NewRecipe() {
+  const router = useRouter();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  function onSave() {
+    // Currently we just navigate back to the personal tab. In the future this should
+    // POST the new recipe to a backend and update local/global state.
+    // TODO: implement save to API and optimistic UI update
+    console.log('Saving (mock):', { title, description });
+    router.push('/(tabs)/personal');
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>🍳 New Recipe</Text>
-      <Text style={styles.description}>
-        placeholder for creating a new recipe. You can later add a form here to input recipe
-        details.
-      </Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Create a New Recipe</Text>
+      <TextInput
+        placeholder="Title"
+        style={styles.input}
+        value={title}
+        onChangeText={setTitle}
+      />
+      <TextInput
+        placeholder="Short description"
+        style={[styles.input, { height: 100 }]}
+        value={description}
+        onChangeText={setDescription}
+        multiline
+      />
+      <View style={styles.buttonRow}>
+        <Button title="Save (mock)" onPress={onSave} disabled={!title.trim()} />
+      </View>
+      <Text style={styles.help}>Note: this is a local mock form. See TODOs in code.</Text>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontSize: 22,
+    fontWeight: '600',
+    marginBottom: 12,
   },
-  description: {
-    fontSize: 16,
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 10,
+    borderRadius: 6,
+    marginBottom: 12,
+  },
+  buttonRow: {
+    marginTop: 8,
+    marginBottom: 12,
+  },
+  help: {
     color: '#666',
-    textAlign: 'center',
+    fontSize: 12,
   },
 });
