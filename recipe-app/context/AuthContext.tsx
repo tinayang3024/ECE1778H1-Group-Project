@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState } from 'react';
 export type RecipeSummary = {
   id: string;
   title: string;
-  duration?: string;
+  duration?: string; // what is this duration referring to? --- IGNORE ---
 };
 
 type AuthContextType = {
