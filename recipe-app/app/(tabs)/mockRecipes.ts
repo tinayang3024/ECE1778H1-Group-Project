@@ -22,7 +22,14 @@ export const MOCK_RECIPES: Recipe[] = [
     duration: '25 mins',
     servings: 2,
     description: 'A quick and creamy carbonara with pancetta and parmesan.',
-    ingredients: ['200g spaghetti', '100g pancetta', '2 large eggs', '50g parmesan', 'Salt', 'Pepper'],
+    ingredients: [
+      '200g spaghetti',
+      '100g pancetta',
+      '2 large eggs',
+      '50g parmesan',
+      'Salt',
+      'Pepper',
+    ],
     steps: [
       'Boil the pasta in salted water until al dente.',
       'Fry pancetta until crispy.',
@@ -40,6 +47,10 @@ export const MOCK_RECIPES: Recipe[] = [
     servings: 1,
     description: 'Healthy and fast breakfast with smashed avocado and lemon.',
     ingredients: ['1 slice sourdough', '1/2 avocado', '1/2 lemon', 'Salt', 'Chili flakes'],
-    steps: ['Toast bread.', 'Smash avocado with lemon and salt.', 'Spread on toast and sprinkle chili flakes.'],
+    steps: [
+      'Toast bread.',
+      'Smash avocado with lemon and salt.',
+      'Spread on toast and sprinkle chili flakes.',
+    ],
   },
 ];

@@ -21,12 +21,7 @@ export default function NewRecipe() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Create a New Recipe</Text>
-      <TextInput
-        placeholder="Title"
-        style={styles.input}
-        value={title}
-        onChangeText={setTitle}
-      />
+      <TextInput placeholder="Title" style={styles.input} value={title} onChangeText={setTitle} />
       <TextInput
         placeholder="Short description"
         style={[styles.input, { height: 100 }]}

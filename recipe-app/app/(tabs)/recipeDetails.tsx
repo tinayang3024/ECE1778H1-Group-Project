@@ -24,29 +24,39 @@ export default function RecipeDetails() {
   const collected = isCollected(SAMPLE_RECIPE.id);
 
   function toggleLikeHandler() {
-    toggleLike({ id: SAMPLE_RECIPE.id, title: SAMPLE_RECIPE.title, duration: SAMPLE_RECIPE.duration });
+    toggleLike({
+      id: SAMPLE_RECIPE.id,
+      title: SAMPLE_RECIPE.title,
+      duration: SAMPLE_RECIPE.duration,
+    });
   }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>{SAMPLE_RECIPE.title}</Text>
-      <Text style={styles.meta}>{SAMPLE_RECIPE.author} • {SAMPLE_RECIPE.duration} • Serves {SAMPLE_RECIPE.servings}</Text>
+      <Text style={styles.meta}>
+        {SAMPLE_RECIPE.author} • {SAMPLE_RECIPE.duration} • Serves {SAMPLE_RECIPE.servings}
+      </Text>
 
       <Text style={styles.sectionTitle}>Description</Text>
       <Text style={styles.paragraph}>{SAMPLE_RECIPE.description}</Text>
 
       <Text style={styles.sectionTitle}>Ingredients</Text>
       {SAMPLE_RECIPE.ingredients.map((ing, idx) => (
-        <Text key={idx} style={styles.listItem}>• {ing}</Text>
+        <Text key={idx} style={styles.listItem}>
+          • {ing}
+        </Text>
       ))}
 
       <Text style={styles.sectionTitle}>Steps</Text>
       {SAMPLE_RECIPE.steps.map((s, idx) => (
-        <Text key={idx} style={styles.listItem}>{idx + 1}. {s}</Text>
+        <Text key={idx} style={styles.listItem}>
+          {idx + 1}. {s}
+        </Text>
       ))}
 
       <View style={styles.buttonRow}>
-  <Button title={collected ? 'Unlike Recipe' : 'Like Recipe'} onPress={toggleLikeHandler} />
+        <Button title={collected ? 'Unlike Recipe' : 'Like Recipe'} onPress={toggleLikeHandler} />
       </View>
 
       <View style={styles.buttonRow}>
@@ -68,4 +78,3 @@ const styles = StyleSheet.create({
   note: { marginTop: 16, color: '#666', fontSize: 12 },
   buttonRow: { marginTop: 12 },
 });
-

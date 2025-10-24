@@ -37,4 +37,3 @@ const styles = StyleSheet.create({
   stat: { fontSize: 16, marginBottom: 12 },
   buttonRow: { marginVertical: 6 },
 });
-

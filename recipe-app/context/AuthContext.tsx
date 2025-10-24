@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = () => setIsLoggedIn(true);
   const logout = () => setIsLoggedIn(false);
 
-
   function toggleLike(r: RecipeSummary) {
     setCollected((prev) => {
       const exists = prev.find((p) => p.id === r.id);
