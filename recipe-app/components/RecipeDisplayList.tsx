@@ -150,9 +150,11 @@ export default function RecipeDisplayList({ data, style, initialQuery = '' }: Pr
       <View style={styles.sortRow}>
         <Text style={styles.sortLabel}>Filter:</Text>
 
-        {filters.length > 0 && <Pressable onPress={clearAll} style={styles.clearBtn}>
-          <Text style={styles.clearText}>Clear Filter</Text>
-        </Pressable>}
+        {filters.length > 0 && (
+          <Pressable onPress={clearAll} style={styles.clearBtn}>
+            <Text style={styles.clearText}>Clear Filter</Text>
+          </Pressable>
+        )}
 
         <Pressable onPress={() => setShowBuilder(true)} style={styles.addFilterBtn}>
           <Text style={styles.addFilterText}>+ Add Filter</Text>

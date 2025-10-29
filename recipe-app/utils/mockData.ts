@@ -86,7 +86,7 @@ export const MOCK_RECIPE_LIST: RecipeData[] = [
       { ingredient: 'Butter', measure: 'for cooking' },
     ],
     dateModified: '2024-04-05',
-  }, 
+  },
   {
     id: '5',
     title: 'Cauliflower Soup',
@@ -124,8 +124,7 @@ export const MOCK_RECIPE_LIST: RecipeData[] = [
       { ingredient: 'Eggs', measure: '1' },
       { ingredient: 'Chocolate Chips', measure: '150g' },
       { ingredient: 'Baking Soda', measure: '1 tsp' },
-      { ingredient: 'Salt',
-        measure: 'a pinch' },
+      { ingredient: 'Salt', measure: 'a pinch' },
     ],
     dateModified: '2024-06-15',
   },
