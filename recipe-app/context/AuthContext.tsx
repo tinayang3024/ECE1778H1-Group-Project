@@ -1,4 +1,3 @@
-// context/AuthContext.tsx
 import React, { createContext, useContext, useState, useMemo } from 'react';
 
 export type RecipeSummary = {
@@ -42,8 +41,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   function logout() {
     setUser(null);
     setAccessToken(null);
-    // if you want to clear likes on logout, uncomment:
-    // setCollected([]);
+    setCollected([]);
   }
 
   function toggleLike(r: RecipeSummary) {

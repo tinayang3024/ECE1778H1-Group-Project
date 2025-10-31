@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Button, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button, Pressable, Share } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
+import { MOCK_RECIPE } from '@/utils/mockData';
+import * as Linking from 'expo-linking';
 
-// RecipeDetails (mock): This page shows one sample recipe detail. For now we
-// hardcode the recipe content inline to avoid a separate mock file.
-// TODO: accept recipe id via route params and fetch real recipe data.
+// TODO: later accept recipe id via route params and fetch real recipe data.
 const SAMPLE_RECIPE = {
   id: 'sample-1',
   title: 'Sample Tomato Pasta',
@@ -32,15 +32,33 @@ export default function RecipeDetails() {
     });
   }
 
+  const handleShare = async () => {
+    try {
+      const deepLink = Linking.createURL(`/recipe/${MOCK_RECIPE.id}`, {
+        scheme: 'recipeapp',
+      });
+
+      const message = `Check out this recipe 🍝: ${MOCK_RECIPE.title}\n\n${deepLink}`;
+
+      await Share.share({
+        message,
+        title: `Share recipe: ${MOCK_RECIPE.title}`,
+      });
+    } catch (err) {
+      console.log('share error', err);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Pressable
         style={styles.backButton}
-        onPress={() => router.replace('/(tabs)')} // fix this line
+        onPress={() => router.replace('/(tabs)')} // unchanged
         android_ripple={{ color: '#ccc', borderless: true }}
       >
         <Ionicons name="arrow-back" size={24} color="#333" />
       </Pressable>
+
       <Text style={styles.title}>{SAMPLE_RECIPE.title}</Text>
       <Text style={styles.meta}>
         {SAMPLE_RECIPE.author} • {SAMPLE_RECIPE.duration} • Serves {SAMPLE_RECIPE.servings}
@@ -65,6 +83,10 @@ export default function RecipeDetails() {
 
       <View style={styles.buttonRow}>
         <Button title={collected ? 'Unlike Recipe' : 'Like Recipe'} onPress={toggleLikeHandler} />
+      </View>
+
+      <View style={styles.buttonRow}>
+        <Button title="Share Recipe Link" onPress={handleShare} />
       </View>
 
       <Text style={styles.note}>TODO: wire real recipes and route params (recipe id)</Text>

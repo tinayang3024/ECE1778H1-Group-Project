@@ -11,8 +11,7 @@ export default function TabPersonalScreen() {
   const displayName = user?.name ?? 'Guest';
   const displayEmail = user?.email ?? 'No email';
   const displayPhoto =
-    user?.picture ??
-    'https://ui-avatars.com/api/?name=User&background=E2E8F0&color=0F172A';
+    user?.picture ?? 'https://ui-avatars.com/api/?name=User&background=E2E8F0&color=0F172A';
 
   // Handle sign-out with confirmation
   const handleSignOut = () => {
@@ -30,7 +29,7 @@ export default function TabPersonalScreen() {
           },
         },
       ],
-      { cancelable: true }
+      { cancelable: true },
     );
   };
 
@@ -57,10 +56,7 @@ export default function TabPersonalScreen() {
         </TouchableOpacity>
 
         {/* Sign Out Button */}
-        <TouchableOpacity
-          style={[styles.actionBtn, styles.logoutBtn]}
-          onPress={handleSignOut}
-        >
+        <TouchableOpacity style={[styles.actionBtn, styles.logoutBtn]} onPress={handleSignOut}>
           <Text style={styles.logoutBtnText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
