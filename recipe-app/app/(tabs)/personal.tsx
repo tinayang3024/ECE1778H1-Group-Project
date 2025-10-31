@@ -1,16 +1,38 @@
+// app/(tabs)/personal.tsx
 import { Text, View } from '@/components/Themed';
-import { StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 
 export default function TabPersonalScreen() {
   const router = useRouter();
-  const { collectedCount, user } = useAuth();
+  const { collectedCount, user, logout } = useAuth();
 
   const displayName = user?.name ?? 'Guest';
   const displayEmail = user?.email ?? 'No email';
   const displayPhoto =
-    user?.picture ?? 'https://ui-avatars.com/api/?name=User&background=E2E8F0&color=0F172A';
+    user?.picture ??
+    'https://ui-avatars.com/api/?name=User&background=E2E8F0&color=0F172A';
+
+  // Handle sign-out with confirmation
+  const handleSignOut = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: () => {
+            logout(); // clear session in AuthContext
+            router.replace('/login'); // go back to login screen
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -34,11 +56,12 @@ export default function TabPersonalScreen() {
           <Text style={styles.primaryBtnText}>View My Collection</Text>
         </TouchableOpacity>
 
+        {/* Sign Out Button */}
         <TouchableOpacity
-          style={[styles.actionBtn, styles.secondaryBtn]}
-          onPress={() => router.push('/(tabs)/newRecipe')}
+          style={[styles.actionBtn, styles.logoutBtn]}
+          onPress={handleSignOut}
         >
-          <Text style={styles.secondaryBtnText}>Create a New Recipe</Text>
+          <Text style={styles.logoutBtnText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -59,12 +82,10 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     alignItems: 'center',
-    // shadow for iOS
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 12,
-    // elevation for Android
     elevation: 1,
   },
   avatar: {
@@ -116,10 +137,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 15,
   },
-  footer: {
-    marginTop: 'auto',
-    textAlign: 'center',
-    fontSize: 12,
-    color: '#94a3b8',
+  logoutBtn: {
+    backgroundColor: '#ef4444', // red for sign out
+  },
+  logoutBtnText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 15,
   },
 });
