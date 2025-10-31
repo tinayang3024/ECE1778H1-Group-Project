@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'; // 👈 Add Expo Icons
 import RecipeDisplayList from '@/components/RecipeDisplayList';
 import { MOCK_RECIPE_LIST } from '@/utils/mockData';
+import RecipeDisplayWrapper from '@/components/RecipeDisplayWrapper';
 
 export default function TabDashboardScreen() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function TabDashboardScreen() {
 
       {/* Recipe List */}
       <View style={{ flex: 1 }}>
-        <RecipeDisplayList data={MOCK_RECIPE_LIST} />
+        <RecipeDisplayWrapper data={undefined} />
       </View>
     </View>
   );

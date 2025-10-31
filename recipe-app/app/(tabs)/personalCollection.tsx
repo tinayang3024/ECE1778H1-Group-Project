@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import RecipeDisplayList from '@/components/RecipeDisplayList';
 import { MOCK_RECIPE_LIST } from '@/utils/mockData';
+import RecipeDisplayWrapper from '@/components/RecipeDisplayWrapper';
 
 export default function TabPersonalCollectionScreen() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function TabPersonalCollectionScreen() {
 
       {/* Recipe List */}
       <View style={{ flex: 1 }}>
-        <RecipeDisplayList data={MOCK_RECIPE_LIST} />
+        <RecipeDisplayWrapper data={MOCK_RECIPE_LIST} />
       </View>
     </View>
   );
