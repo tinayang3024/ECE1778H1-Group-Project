@@ -8,7 +8,9 @@ import { useAuth } from '@/context/AuthContext';
 // Clicking "View Collection" takes the user to the personalCollection screen.
 export default function TabPersonalScreen() {
   const router = useRouter();
-  const { collectedCount } = useAuth();
+  const { collectedCount, user } = useAuth();
+
+  console.log('User info in Personal tab:', user);
 
   return (
     <View style={styles.container}>

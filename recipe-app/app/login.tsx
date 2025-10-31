@@ -14,7 +14,7 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import GoogleSignInHelper from '@/components/SignIn';
+import { GoogleSignInHandler } from '../components/SignInHandler';
 
 const GOOGLE_CLIENT_ID_WEBAPP =
   '590532636165-qup3d4tbpbl7fe255edokd2snr88sqid.apps.googleusercontent.com';
@@ -109,12 +109,15 @@ export default function LoginScreen() {
   //   // @ts-expect-error useProxy is missing from types
   //   await promptAsync({ useProxy: true });
   // };
+  const onPressGoogle = async () => {
+    await GoogleSignInHandler(login); // 👈 this is the key line
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome</Text>
       <Text style={styles.subtitle}>Sign in to continue</Text>
-      <GoogleSigninButton onPress={GoogleSignInHelper} />
+      <GoogleSigninButton onPress={onPressGoogle} />
       {/* <Pressable
         style={({ pressed }) => [
           styles.googleButton,
