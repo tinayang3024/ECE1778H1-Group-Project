@@ -12,7 +12,7 @@ export default function TabDashboardScreen() {
     <View style={styles.container}>
       {/* Header Section */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Recipes</Text>
+        <Text style={styles.headerTitle}>Recipe</Text>
 
         {/* Icon Button — floating style but aligned with header */}
         <Pressable

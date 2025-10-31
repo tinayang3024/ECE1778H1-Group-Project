@@ -1,41 +1,125 @@
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 
-// Personal profile page: shows user info and number of collected recipes.
-// Clicking "View Collection" takes the user to the personalCollection screen.
 export default function TabPersonalScreen() {
   const router = useRouter();
   const { collectedCount, user } = useAuth();
 
-  console.log('User info in Personal tab:', user);
+  const displayName = user?.name ?? 'Guest';
+  const displayEmail = user?.email ?? 'No email';
+  const displayPhoto =
+    user?.picture ?? 'https://ui-avatars.com/api/?name=User&background=E2E8F0&color=0F172A';
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Personal</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      {/* Profile card */}
+      <View style={styles.profileCard}>
+        <Image source={{ uri: displayPhoto }} style={styles.avatar} />
 
-      <Text style={styles.stat}>Collected recipes: {collectedCount}</Text>
-
-      <View style={styles.buttonRow}>
-        <Button title="View Collection" onPress={() => router.push('/(tabs)/personalCollection')} />
+        <View style={styles.profileText}>
+          <Text style={styles.name}>{displayName}</Text>
+          <Text style={styles.email}>{displayEmail}</Text>
+          <Text style={styles.subtle}>Collected recipes: {collectedCount}</Text>
+        </View>
       </View>
 
-      <View style={styles.buttonRow}>
-        <Button title="Create New Recipe" onPress={() => router.push('/(tabs)/newRecipe')} />
-      </View>
+      {/* Actions */}
+      <View style={styles.actions}>
+        <TouchableOpacity
+          style={[styles.actionBtn, styles.primaryBtn]}
+          onPress={() => router.push('/(tabs)/personalCollection')}
+        >
+          <Text style={styles.primaryBtnText}>View My Collection</Text>
+        </TouchableOpacity>
 
-      <EditScreenInfo path="app/(tabs)/personal.tsx" />
+        <TouchableOpacity
+          style={[styles.actionBtn, styles.secondaryBtn]}
+          onPress={() => router.push('/(tabs)/newRecipe')}
+        >
+          <Text style={styles.secondaryBtnText}>Create a New Recipe</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
+const AVATAR_SIZE = 72;
+
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 12 },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
-  separator: { marginVertical: 8, height: 1, width: '100%' },
-  stat: { fontSize: 16, marginBottom: 12 },
-  buttonRow: { marginVertical: 6 },
+  container: {
+    flex: 1,
+    padding: 16,
+    gap: 16,
+  },
+  profileCard: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    // shadow for iOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 12,
+    // elevation for Android
+    elevation: 1,
+  },
+  avatar: {
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE,
+    borderRadius: AVATAR_SIZE / 2,
+    backgroundColor: '#e2e8f0',
+  },
+  profileText: {
+    marginLeft: 14,
+    flex: 1,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  email: {
+    fontSize: 14,
+    color: '#475569',
+    marginBottom: 6,
+  },
+  subtle: {
+    fontSize: 12,
+    color: '#94a3b8',
+  },
+  actions: {
+    gap: 12,
+  },
+  actionBtn: {
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primaryBtn: {
+    backgroundColor: '#1e90ff',
+  },
+  primaryBtnText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 15,
+  },
+  secondaryBtn: {
+    backgroundColor: '#e2e8f0',
+  },
+  secondaryBtnText: {
+    color: '#0f172a',
+    fontWeight: '500',
+    fontSize: 15,
+  },
+  footer: {
+    marginTop: 'auto',
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#94a3b8',
+  },
 });

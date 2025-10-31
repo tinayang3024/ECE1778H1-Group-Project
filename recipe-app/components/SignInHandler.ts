@@ -1,4 +1,3 @@
-// signin.ts
 import {
   GoogleSignin,
   statusCodes,
@@ -9,7 +8,7 @@ import { AuthUser } from '../context/AuthContext';
 
 // make it accept a callback coming from the component / screen
 export const GoogleSignInHandler = async (
-  onSuccess: (session: { user: AuthUser; accessToken: string }) => void
+  onSuccess: (session: { user: AuthUser; accessToken: string }) => void,
 ) => {
   try {
     await GoogleSignin.hasPlayServices();

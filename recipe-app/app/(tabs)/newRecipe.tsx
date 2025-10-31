@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 // Simple in-memory form for creating a recipe. This is intentionally lightweight and
 // uses local component state. Integrate with backend / context once available.
@@ -20,6 +21,13 @@ export default function NewRecipe() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Pressable
+        style={styles.backButton}
+        onPress={() => router.replace('/(tabs)')} // fix this line
+        android_ripple={{ color: '#ccc', borderless: true }}
+      >
+        <Ionicons name="arrow-back" size={24} color="#333" />
+      </Pressable>
       <Text style={styles.title}>Create a New Recipe</Text>
       <TextInput placeholder="Title" style={styles.input} value={title} onChangeText={setTitle} />
       <TextInput
@@ -60,5 +68,10 @@ const styles = StyleSheet.create({
   help: {
     color: '#666',
     fontSize: 12,
+  },
+  backButton: {
+    padding: 6,
+    borderRadius: 20,
+    backgroundColor: '#f3f4f6',
   },
 });

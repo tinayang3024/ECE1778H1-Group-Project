@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
 
 // RecipeDetails (mock): This page shows one sample recipe detail. For now we
 // hardcode the recipe content inline to avoid a separate mock file.
@@ -33,6 +34,13 @@ export default function RecipeDetails() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Pressable
+        style={styles.backButton}
+        onPress={() => router.replace('/(tabs)')} // fix this line
+        android_ripple={{ color: '#ccc', borderless: true }}
+      >
+        <Ionicons name="arrow-back" size={24} color="#333" />
+      </Pressable>
       <Text style={styles.title}>{SAMPLE_RECIPE.title}</Text>
       <Text style={styles.meta}>
         {SAMPLE_RECIPE.author} • {SAMPLE_RECIPE.duration} • Serves {SAMPLE_RECIPE.servings}
@@ -59,10 +67,6 @@ export default function RecipeDetails() {
         <Button title={collected ? 'Unlike Recipe' : 'Like Recipe'} onPress={toggleLikeHandler} />
       </View>
 
-      <View style={styles.buttonRow}>
-        <Button title="Return to Home" onPress={() => router.push('/(tabs)')} />
-      </View>
-
       <Text style={styles.note}>TODO: wire real recipes and route params (recipe id)</Text>
     </ScrollView>
   );
@@ -77,4 +81,9 @@ const styles = StyleSheet.create({
   listItem: { marginTop: 6, color: '#333' },
   note: { marginTop: 16, color: '#666', fontSize: 12 },
   buttonRow: { marginTop: 12 },
+  backButton: {
+    padding: 6,
+    borderRadius: 20,
+    backgroundColor: '#f3f4f6',
+  },
 });

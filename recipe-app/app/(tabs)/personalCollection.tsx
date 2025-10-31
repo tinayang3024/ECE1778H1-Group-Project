@@ -1,11 +1,39 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+// app/(tabs)/personalCollection.tsx
+import { StyleSheet, Pressable } from 'react-native';
+import { Text, View } from '@/components/Themed';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import RecipeDisplayList from '@/components/RecipeDisplayList';
+import { MOCK_RECIPE_LIST } from '@/utils/mockData';
 
-export default function PersonalCollection() {
+export default function TabPersonalCollectionScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Personal Collection</Text>
-      <Text style={styles.description}>This is where your collected recipes will appear.</Text>
+      {/* Header Section */}
+      <View style={styles.header}>
+        {/* 👈 Go Back Button */}
+        <Pressable
+          style={styles.backButton}
+          onPress={() => router.replace('/(tabs)/personal')}
+          android_ripple={{ color: '#ccc', borderless: true }}
+        >
+          <Ionicons name="arrow-back" size={24} color="#333" />
+        </Pressable>
+
+        <Text style={styles.headerTitle}>Recipe Collection</Text>
+        {/* Invisible placeholder to keep title centered */}
+        <View style={{ width: 24 }} />
+      </View>
+
+      {/* Separator */}
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+
+      {/* Recipe List */}
+      <View style={{ flex: 1 }}>
+        <RecipeDisplayList data={MOCK_RECIPE_LIST} />
+      </View>
     </View>
   );
 }
@@ -13,18 +41,31 @@ export default function PersonalCollection() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    width: '100%',
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    justifyContent: 'space-between',
+    paddingTop: 16,
+    paddingBottom: 4,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  backButton: {
+    padding: 6,
+    borderRadius: 20,
+    backgroundColor: '#f3f4f6',
   },
-  description: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#222',
+  },
+  separator: {
+    marginVertical: 8,
+    height: 1,
+    width: '100%',
+    backgroundColor: '#eee',
   },
 });
