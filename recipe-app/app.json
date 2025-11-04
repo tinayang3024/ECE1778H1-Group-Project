@@ -34,15 +34,36 @@
     "plugins": [
       "expo-router",
       [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 36,
+            "minSdkVersion": 24,
+            "kotlinVersion": "2.1.20",
+            "gradlePluginVersion": "8.6.0"
+          }
+        }
+      ],
+      [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.590532636165-2cu1n0n22kg3i34gc6aqfgbm3kuj1gtj"
+          "iosUrlScheme": "com.googleusercontent.apps.590532636165-2cu1n0n22kg3i34gc6aqfgbm3kuj1gtj",
+          "androidClientId": "590532636165-3aqogltatr3nuf4hlkgt282p743gvveg.apps.googleusercontent.com"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
     },
-    "deepLinks": ["recipe/*"]
+    "deepLinks": [
+      "recipe/*"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "915a1603-c7d6-4626-a7eb-9a19412ced5e"
+      }
+    }
   }
 }
