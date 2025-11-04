@@ -13,6 +13,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { RecipeData } from '../utils/types';
+import { mealToRecipeData, mealFromFilterToRecipeData } from '../utils/mealMapper';
 import RecipeDisplayList from './RecipeDisplayList';
 
 type Props = {
@@ -42,54 +43,7 @@ const includesCI = (hay: string | undefined | null, needle: string) => {
   return hay.toLowerCase().includes(needle.toLowerCase());
 };
 
-// Map meal from search/random → RecipeData
-function mealToRecipeData(meal: any): RecipeData {
-  const ingredients: { ingredient: string; measure: string }[] = [];
-  for (let i = 1; i <= 20; i++) {
-    const ing = meal[`strIngredient${i}`];
-    const mea = meal[`strMeasure${i}`];
-    if (ing && ing.trim() !== '') {
-      ingredients.push({
-        ingredient: ing,
-        measure: mea || '',
-      });
-    }
-  }
-
-  const tags =
-    typeof meal.strTags === 'string' && meal.strTags.length > 0
-      ? meal.strTags.split(',').map((t: string) => t.trim())
-      : [];
-
-  return {
-    id: meal.idMeal,
-    title: meal.strMeal,
-    category: meal.strCategory ?? '',
-    area: meal.strArea ?? '',
-    instructions: meal.strInstructions ?? '',
-    tags,
-    imageUrl: meal.strMealThumb ?? undefined,
-    youtubeUrl: meal.strYoutube ?? undefined,
-    ingredients,
-    dateModified: meal.dateModified ?? undefined,
-  };
-}
-
-// Map meal from filter.php → RecipeData
-function mealFromFilterToRecipeData(meal: any): RecipeData {
-  return {
-    id: meal.idMeal,
-    title: meal.strMeal,
-    category: '',
-    area: '',
-    instructions: '',
-    tags: [],
-    imageUrl: meal.strMealThumb ?? undefined,
-    youtubeUrl: undefined,
-    ingredients: [],
-    dateModified: undefined,
-  };
-}
+// mapping helpers moved to utils/mealMapper.ts
 
 export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }: Props) {
   const hasExternalData = typeof data !== 'undefined'; // 👈 key flag

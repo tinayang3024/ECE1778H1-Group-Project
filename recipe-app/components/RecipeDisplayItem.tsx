@@ -16,11 +16,13 @@ export default function RecipeDisplayItem({ recipe }: Props) {
 
   const onPress = () => {
     // Navigate to your details screen; pass id (and optionally serialize minimal data)
+    console.log('[RecipeDisplayItem] navigate to recipeDetails, params=', { id: recipe.id });
+    // push to the dynamic details route file so the router resolves the [id] param
     router.push({
-      pathname: '/(tabs)/recipeDetails',
+      pathname: '/(tabs)/recipeDetails/[id]',
       params: { id: recipe.id },
     });
-  };
+   };
 
   return (
     <Pressable

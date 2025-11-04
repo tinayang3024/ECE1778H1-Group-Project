@@ -45,7 +45,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="recipeDetails"
+        name="recipeDetails/[id]"
         options={{
           href: null,
           title: 'Recipe Details',
