@@ -1,5 +1,6 @@
 import { Stack, Redirect } from 'expo-router';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import { CollectedProvider } from '@/context/CollectedContext';
 import React from 'react';
 
 function RootNavigation() {
@@ -12,11 +13,14 @@ function RootNavigation() {
   return <Redirect href="/(tabs)" />;
 }
 
-export default function RootLayout() {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <RootNavigation />
-      <Stack screenOptions={{ headerShown: false }} />
+      <CollectedProvider>
+        <RootNavigation />
+        <Stack screenOptions={{ headerShown: false }} />
+        {children}
+      </CollectedProvider>
     </AuthProvider>
   );
 }

@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '@/context/AuthContext';
+import { useCollected } from '@/context/CollectedContext';
 import { Ionicons } from '@expo/vector-icons';
 import { MOCK_RECIPES } from '../_mockRecipes';
 import { mapMealToDetail } from '../../../utils/mealMapper';
@@ -21,7 +21,7 @@ import * as Linking from 'expo-linking';
 export default function RecipeDetailsId() {
   const router = useRouter();
   const navigation = useNavigation();
-  const { toggleLike, isCollected } = useAuth();
+  const { toggleLike, isCollected } = useCollected();
 
   const params = useLocalSearchParams();
   const id = typeof params.id === 'string' ? params.id : String(params.id ?? '');
@@ -92,7 +92,8 @@ export default function RecipeDetailsId() {
 
   function toggleLikeHandler() {
     if (!recipe) return;
-    toggleLike({ id: recipe.id, title: recipe.title });
+    const full = { id: recipe.id, title: recipe.title, imageUrl: recipe.image, instructions: recipe.instructions };
+    toggleLike(full);
   }
 
   const handleShare = async () => {
@@ -104,6 +105,18 @@ export default function RecipeDetailsId() {
     } catch (err) {
       console.log('[RecipeDetails:id] share error', err);
     }
+  };
+
+  const handleToggleLike = () => {
+    if (!recipe) return;
+    toggleLike({
+      id: recipe.id,
+      title: recipe.title,
+      imageUrl: recipe.image,
+      description: recipe.description,
+      instructions: recipe.instructions,
+      ingredients: recipe.ingredients ?? [],
+    });
   };
 
   return (
@@ -168,7 +181,7 @@ export default function RecipeDetailsId() {
 
       <View style={styles.actionRow}>
         <Pressable
-          onPress={toggleLikeHandler}
+          onPress={handleToggleLike}
           style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
           accessibilityRole="button"
           accessibilityLabel={collected ? 'Unlike recipe' : 'Like recipe'}

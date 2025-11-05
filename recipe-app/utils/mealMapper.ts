@@ -42,7 +42,7 @@ export function mealToRecipeData(meal: any) {
     area: meal.strArea ?? '',
     instructions: meal.strInstructions ?? '',
     tags,
-    imageUrl: meal.strMealThumb,
+    imageUrl: meal.strMealThumb ?? undefined,
     youtubeUrl: meal.strYoutube ?? undefined,
     ingredients,
     dateModified: meal.dateModified ?? undefined,
