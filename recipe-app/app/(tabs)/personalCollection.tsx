@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import RecipeDisplayList from '@/components/RecipeDisplayList';
 import { MOCK_RECIPE_LIST } from '@/utils/mockData';
+import { MOCK_RECIPES } from './_mockRecipes';
 import RecipeDisplayWrapper from '@/components/RecipeDisplayWrapper';
 
 export default function TabPersonalCollectionScreen() {
@@ -33,7 +34,21 @@ export default function TabPersonalCollectionScreen() {
 
       {/* Recipe List */}
       <View style={{ flex: 1 }}>
-        <RecipeDisplayWrapper data={MOCK_RECIPE_LIST} />
+        {/* Show user-created mock recipes (stored in app/(tabs)/_mockRecipes.ts) alongside demo list */}
+        <RecipeDisplayWrapper
+          data={MOCK_RECIPES.map((r) => ({
+            id: r.id,
+            title: r.title,
+            category: 'User Recipe',
+            area: '',
+            instructions: r.steps ? r.steps.join('\n') : r.description ?? '',
+            tags: [],
+            imageUrl: r.image ?? '',
+            youtubeUrl: '',
+            ingredients: (r.ingredients ?? []).map((ing) => ({ ingredient: ing, measure: '' })),
+            dateModified: undefined,
+          }))}
+        />
       </View>
     </View>
   );
