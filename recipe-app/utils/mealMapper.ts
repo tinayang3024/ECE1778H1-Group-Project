@@ -1,6 +1,11 @@
 // mealMapper.ts
 // Helpers to map TheMealDB meal objects into the app's recipe shapes and normalize instructions.
 
+import { Image as RNImage } from 'react-native';
+
+const DEFAULT_IMAGE_ASSET = require('../assets/images/kitchen.jpg');
+const DEFAULT_IMAGE_URL = RNImage.resolveAssetSource(DEFAULT_IMAGE_ASSET).uri;
+
 export type MappedRecipe = {
   id: string;
   title: string;

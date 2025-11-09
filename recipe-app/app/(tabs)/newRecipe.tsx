@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TextInput, ScrollView, Pressable, Image as RNIm
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { MOCK_RECIPES, type Recipe } from './_mockRecipes';
+import { useCollected } from '@/context/CollectedContext';
 // Use a local asset as the default image. Make sure the file exists at the path below.
 const DEFAULT_IMAGE_ASSET = require('../../assets/images/kitchen.jpg');
 const DEFAULT_IMAGE_URL = RNImage.resolveAssetSource(DEFAULT_IMAGE_ASSET).uri;
@@ -12,6 +13,7 @@ const DEFAULT_IMAGE_URL = RNImage.resolveAssetSource(DEFAULT_IMAGE_ASSET).uri;
 // TODO: replace with form validation, image upload, and API persistence.
 export default function NewRecipe() {
   const router = useRouter();
+  const { toggleLike } = useCollected();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   // keep a local image state as a harmless fallback in case old bundles reference it
@@ -52,6 +54,19 @@ export default function NewRecipe() {
 
     // Insert at the front so it's immediately visible in lists
     MOCK_RECIPES.unshift(newRecipe);
+    // Add to user's collected items by default (mark as liked)
+    try {
+      toggleLike({
+        id: newRecipe.id,
+        title: newRecipe.title,
+        imageUrl: newRecipe.image,
+        description: newRecipe.description,
+        instructions: newRecipe.steps.join('\n'),
+        ingredients: newRecipe.ingredients,
+      });
+    } catch (e) {
+      // ignore if provider not ready
+    }
     console.log('Saved mock recipe:', newRecipe);
     // mark saved and show success UI (we keep recipe in MOCK_RECIPES)
     setSaved(true);
@@ -79,6 +94,9 @@ export default function NewRecipe() {
       <Ionicons name="checkmark-circle" size={140} color="#10b981" />
       <Text style={styles.successTitle}>Recipe saved!</Text>
       <Text style={styles.successSub}>Your recipe has been added to your collection.</Text>
+      <Text style={{ marginTop: 8, color: '#666', textAlign: 'center' }}>
+        You can now view the recipe in your personal collection!
+      </Text>
     </View>
   ) : (
     <ScrollView contentContainerStyle={styles.container}>
@@ -98,7 +116,7 @@ export default function NewRecipe() {
         onChangeText={setDescription}
         multiline
       />
-  <TextInput placeholder="Author (optional)" style={styles.input} value={author} onChangeText={setAuthor} />
+      <TextInput placeholder="Author (optional)" style={styles.input} value={author} onChangeText={setAuthor} />
       <TextInput placeholder="Duration (e.g. 20 mins)" style={styles.input} value={duration} onChangeText={setDuration} />
       <TextInput placeholder="Servings (number)" style={styles.input} value={servings} onChangeText={setServings} keyboardType="numeric" />
 

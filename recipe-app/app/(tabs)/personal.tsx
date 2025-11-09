@@ -3,10 +3,14 @@ import { Text, View } from '@/components/Themed';
 import { StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
+import { useCollected } from '@/context/CollectedContext';
 
 export default function TabPersonalScreen() {
   const router = useRouter();
-  const { collectedCount, user, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const { collected } = useCollected();
+
+  const collectedCount = (collected ?? []).length;
 
   const displayName = user?.name ?? 'Guest';
   const displayEmail = user?.email ?? 'No email';
