@@ -4,11 +4,21 @@ import { StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 import { useCollected } from '@/context/CollectedContext';
+import { useNotifications } from '@/context/NotificationContext';
+import { Switch, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function TabPersonalScreen() {
   const router = useRouter();
   const { user, logout } = useAuth();
   const { collected } = useCollected();
+  const {
+    isOptedIn,
+    enableDailyNotifications,
+    disableDailyNotifications,
+    sendTestNotification,
+    permissionStatus,
+  } = useNotifications();
 
   const collectedCount = (collected ?? []).length;
 
@@ -63,6 +73,36 @@ export default function TabPersonalScreen() {
         <TouchableOpacity style={[styles.actionBtn, styles.logoutBtn]} onPress={handleSignOut}>
           <Text style={styles.logoutBtnText}>Sign Out</Text>
         </TouchableOpacity>
+      </View>
+
+      {/* Notifications Section */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Notifications</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Text>Daily recipe reminder</Text>
+          <Switch
+            value={!!isOptedIn}
+            onValueChange={async (val) => {
+              if (val) {
+                await enableDailyNotifications();
+              } else {
+                await disableDailyNotifications();
+              }
+            }}
+          />
+        </View>
+        <View style={{ marginTop: 8, flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+          <Pressable
+            onPress={() => sendTestNotification()}
+            style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1, padding: 8, flexDirection: 'row', alignItems: 'center' }]}
+          >
+            <Ionicons name="send" size={20} color="#111" />
+            <Text style={{ marginLeft: 8 }}>Test notification</Text>
+          </Pressable>
+          <Text style={{ marginLeft: 8, color: '#666' }}>
+            Permission: {permissionStatus ?? 'unknown'}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -144,5 +184,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     fontSize: 15,
+  },
+  section: {
+    padding: 16,
+    gap: 8,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
   },
 });

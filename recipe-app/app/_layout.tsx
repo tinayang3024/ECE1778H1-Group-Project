@@ -1,6 +1,7 @@
 import { Stack, Redirect } from 'expo-router';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { CollectedProvider } from '@/context/CollectedContext';
+import { NotificationProvider } from '@/context/NotificationContext';
 import React from 'react';
 
 function RootNavigation() {
@@ -17,9 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <AuthProvider>
       <CollectedProvider>
-        <RootNavigation />
-        <Stack screenOptions={{ headerShown: false }} />
-        {children}
+        <NotificationProvider>
+          <RootNavigation />
+          <Stack screenOptions={{ headerShown: false }} />
+        </NotificationProvider>
       </CollectedProvider>
     </AuthProvider>
   );
