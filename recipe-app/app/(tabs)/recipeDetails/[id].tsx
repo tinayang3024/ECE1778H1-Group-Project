@@ -24,6 +24,7 @@ export default function RecipeDetailsId() {
   const { toggleLike, isCollected } = useCollected();
 
   const params = useLocalSearchParams();
+  const openedFrom = (params as any)?.from;
   const id = typeof params.id === 'string' ? params.id : String(params.id ?? '');
 
   const [recipe, setRecipe] = useState<any | null>(() => {
@@ -43,6 +44,7 @@ export default function RecipeDetailsId() {
 
     async function fetchById(mealId: string) {
       console.log('[RecipeDetails:id] fetchById start', mealId);
+      console.log('openedFrom this page', openedFrom);
       setLoading(true);
       setError(null);
       try {
@@ -121,7 +123,24 @@ export default function RecipeDetailsId() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Pressable style={styles.backButton} onPress={() => router.replace('/(tabs)')}>
+      <Pressable
+        style={styles.backButton}
+        onPress={() => {
+          // If we know the details screen was opened from Personal Collection, return there.
+          if (openedFrom === 'personal') {
+            router.replace('/(tabs)/personalCollection');
+            return;
+          }
+
+          // Otherwise try to go back in the navigation stack, then fallback to dashboard.
+          if (navigation && (navigation as any).canGoBack && (navigation as any).canGoBack()) {
+            (navigation as any).goBack();
+            return;
+          }
+
+          router.replace('/(tabs)');
+        }}
+      >
         <Ionicons name="arrow-back" size={24} color="#333" />
       </Pressable>
 

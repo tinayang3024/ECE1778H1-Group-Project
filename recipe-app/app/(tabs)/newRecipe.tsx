@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, Pressable, Image as RNImage } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { MOCK_RECIPES, type Recipe } from './_mockRecipes';
+import { MOCK_RECIPES, addMockRecipe, type Recipe } from './_mockRecipes';
 import { useCollected } from '@/context/CollectedContext';
 // Use a local asset as the default image. Make sure the file exists at the path below.
 const DEFAULT_IMAGE_ASSET = require('../../assets/images/kitchen.jpg');
@@ -14,9 +14,9 @@ const DEFAULT_IMAGE_URL = RNImage.resolveAssetSource(DEFAULT_IMAGE_ASSET).uri;
 export default function NewRecipe() {
   const router = useRouter();
   const { toggleLike } = useCollected();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  // keep a local image state as a harmless fallback in case old bundles reference it
   const [image, setImage] = useState('');
   const [author, setAuthor] = useState('');
   const [duration, setDuration] = useState('');
@@ -26,7 +26,52 @@ export default function NewRecipe() {
   const [saved, setSaved] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
 
+  // errors for required fields (description allowed empty)
+  const [errors, setErrors] = useState<{
+    title?: string | null;
+    author?: string | null;
+    duration?: string | null;
+    servings?: string | null;
+    ingredients?: string | null;
+    steps?: string | null;
+  }>({});
+
+  // validate servings: must be a positive integer (e.g. "1", "2", ...)
+  function validateServingsValue(value: string) {
+    if (!value) return 'Servings is required';
+    const trimmed = value.trim();
+    if (!/^\d+$/.test(trimmed)) {
+      return 'Servings must be a whole positive number';
+    }
+    const n = parseInt(trimmed, 10);
+    if (Number.isNaN(n) || n <= 0) {
+      return 'Servings must be greater than zero';
+    }
+    return null;
+  }
+
+  function validateAll() {
+    const next: typeof errors = {};
+    if (!title.trim()) next.title = 'Title is missing';
+    if (!author.trim()) next.author = 'Author is missing';
+    if (!duration.trim()) next.duration = 'Duration is missing';
+    const srvErr = validateServingsValue(servings);
+    if (srvErr) next.servings = srvErr;
+    const ingList = ingredients.split('\n').map((s) => s.trim()).filter(Boolean);
+    if (ingList.length === 0) next.ingredients = 'Don\'t forget to add ingredients!';
+    const stepList = steps.split('\n').map((s) => s.trim()).filter(Boolean);
+    if (stepList.length === 0) next.steps = 'Don\'t forget to add steps!';
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }
+
   function onSave() {
+    const ok = validateAll();
+    if (!ok) {
+      // don't proceed if validation fails
+      return;
+    }
+
     // Build a Recipe object from form values and append to in-memory MOCK_RECIPES.
     const newId = String(Date.now());
 
@@ -43,7 +88,7 @@ export default function NewRecipe() {
     const newRecipe: Recipe = {
       id: newId,
       title: title || 'Untitled Recipe',
-      author: author || 'You',
+      author: author || 'Anonymous user',
       image: DEFAULT_IMAGE_URL,
       duration: duration || undefined,
       servings: servings ? parseInt(servings, 10) : undefined,
@@ -52,8 +97,12 @@ export default function NewRecipe() {
       steps: stepList.length > 0 ? stepList : [],
     };
 
-    // Insert at the front so it's immediately visible in lists
-    MOCK_RECIPES.unshift(newRecipe);
+    // Insert at the front and persist user-created recipes to AsyncStorage
+    addMockRecipe(newRecipe).catch(() => {
+      // best-effort: if persistence fails, still keep in-memory
+      MOCK_RECIPES.unshift(newRecipe);
+    });
+
     // Add to user's collected items by default (mark as liked)
     try {
       toggleLike({
@@ -84,7 +133,21 @@ export default function NewRecipe() {
     setSteps('');
     setSaved(false);
     setSavedId(null);
+    setErrors({});
   }
+
+  // helper to compute form validity for disabling Save button
+  const isFormValid = () => {
+    if (saved) return false;
+    if (!title.trim()) return false;
+    if (!author.trim()) return false;
+    if (!duration.trim()) return false;
+    if (!servings.trim()) return false;
+    if (!ingredients.split('\n').map((s) => s.trim()).filter(Boolean).length) return false;
+    if (!steps.split('\n').map((s) => s.trim()).filter(Boolean).length) return false;
+    if (validateServingsValue(servings)) return false;
+    return true;
+  };
 
   return saved ? (
     <View style={styles.successContainer}>
@@ -102,49 +165,79 @@ export default function NewRecipe() {
     <ScrollView contentContainerStyle={styles.container}>
       <Pressable
         style={styles.backButton}
-        onPress={() => router.replace('/(tabs)')} // fix this line
+        onPress={() => router.replace('/(tabs)')}
         android_ripple={{ color: '#ccc', borderless: true }}
       >
         <Ionicons name="arrow-back" size={24} color="#333" />
       </Pressable>
       <Text style={styles.title}>Create a New Recipe</Text>
-      <TextInput placeholder="Title" style={styles.input} value={title} onChangeText={setTitle} />
+
+      <TextInput placeholder="Title" style={styles.input} value={title} onChangeText={(val) => { setTitle(val); setErrors((e) => ({ ...e, title: val.trim() ? null : 'Title is required' })); }} />
+      {errors.title ? <Text style={styles.errText}>{errors.title}</Text> : null}
+
       <TextInput
-        placeholder="Short description"
+        placeholder="Short description (optional)"
         style={[styles.input, { height: 100 }]}
         value={description}
         onChangeText={setDescription}
         multiline
       />
-      <TextInput placeholder="Author (optional)" style={styles.input} value={author} onChangeText={setAuthor} />
-      <TextInput placeholder="Duration (e.g. 20 mins)" style={styles.input} value={duration} onChangeText={setDuration} />
-      <TextInput placeholder="Servings (number)" style={styles.input} value={servings} onChangeText={setServings} keyboardType="numeric" />
 
-      <Text style={{ marginTop: 8, marginBottom: 6, fontWeight: '600' }}>Ingredients (one per line)</Text>
+      <TextInput placeholder="Author" style={styles.input} value={author} onChangeText={(val) => { setAuthor(val); setErrors((e) => ({ ...e, author: val.trim() ? null : 'Author is required' })); }} />
+      {errors.author ? <Text style={styles.errText}>{errors.author}</Text> : null}
+
+      <TextInput placeholder="Duration (e.g. 20 mins)" style={styles.input} value={duration} onChangeText={(val) => { setDuration(val); setErrors((e) => ({ ...e, duration: val.trim() ? null : 'Duration is required' })); }} />
+      {errors.duration ? <Text style={styles.errText}>{errors.duration}</Text> : null}
+
+      <TextInput
+        placeholder="Servings (number)"
+        style={styles.input}
+        value={servings}
+        onChangeText={(val) => {
+          setServings(val);
+          const srvErr = validateServingsValue(val) as string | null;
+          setErrors((e) => ({ ...e, servings: srvErr }));
+        }}
+        keyboardType="numeric"
+      />
+      {errors.servings ? <Text style={styles.errText}>{errors.servings}</Text> : null}
+
+      <Text style={{ marginTop: 8, marginBottom: 6, fontWeight: '600' }}>Ingredients</Text>
       <TextInput
         placeholder="e.g. 200g spaghetti"
-        style={[styles.input, { height: 120 }]}
+        style={[styles.input, { height: 120, textAlignVertical: 'top' }]}
         value={ingredients}
-        onChangeText={setIngredients}
+        onChangeText={(val) => {
+          setIngredients(val);
+          const lst = val.split('\n').map((s) => s.trim()).filter(Boolean);
+          setErrors((e) => ({ ...e, ingredients: lst.length ? null : 'Please provide at least one ingredient' }));
+        }}
         multiline
       />
+      {errors.ingredients ? <Text style={styles.errText}>{errors.ingredients}</Text> : null}
 
-      <Text style={{ marginTop: 8, marginBottom: 6, fontWeight: '600' }}>Steps (one per line)</Text>
+      <Text style={{ marginTop: 8, marginBottom: 6, fontWeight: '600' }}>Steps</Text>
       <TextInput
-        placeholder="Step 1\nStep 2\nStep 3"
-        style={[styles.input, { height: 140 }]}
+        placeholder="e.g. Mix the ingredients..."
+        style={[styles.input, { height: 140, textAlignVertical: 'top' }]}
         value={steps}
-        onChangeText={setSteps}
+        onChangeText={(val) => {
+          setSteps(val);
+          const lst = val.split('\n').map((s) => s.trim()).filter(Boolean);
+          setErrors((e) => ({ ...e, steps: lst.length ? null : 'Please provide at least one step' }));
+        }}
         multiline
       />
+      {errors.steps ? <Text style={styles.errText}>{errors.steps}</Text> : null}
+
       <View style={styles.buttonRow}>
         <Pressable
           onPress={onSave}
-          disabled={!title.trim()}
+          disabled={!isFormValid()}
           style={({ pressed }) => [
             styles.saveButton,
             pressed && styles.saveButtonPressed,
-            !title.trim() && styles.saveButtonDisabled,
+            !isFormValid() && styles.saveButtonDisabled,
           ]}
           accessibilityRole="button"
           accessibilityLabel="Save recipe"
@@ -171,6 +264,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
     marginBottom: 12,
+  },
+  errText: {
+    color: 'red',
+    marginBottom: 8,
   },
   buttonRow: {
     marginTop: 8,

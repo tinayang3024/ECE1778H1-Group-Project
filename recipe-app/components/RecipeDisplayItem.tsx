@@ -1,7 +1,7 @@
 // components/RecipeDisplayItem.tsx
 import React from 'react';
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, usePathname } from 'expo-router';
 import { RecipeData } from '../utils/types';
 
 type Props = {
@@ -13,14 +13,14 @@ type Props = {
 
 export default function RecipeDisplayItem({ recipe }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const onPress = () => {
-    // Navigate to your details screen; pass id (and optionally serialize minimal data)
-    console.log('[RecipeDisplayItem] navigate to recipeDetails, params=', { id: recipe.id });
-    // push to the dynamic details route file so the router resolves the [id] param
+    // push to the path if coming from the personal collection page
+    const fromParam = pathname?.includes('personalCollection') ? 'personal' : '';
     router.push({
       pathname: '/(tabs)/recipeDetails/[id]',
-      params: { id: recipe.id },
+      params: { id: recipe.id, from: fromParam },
     });
    };
 

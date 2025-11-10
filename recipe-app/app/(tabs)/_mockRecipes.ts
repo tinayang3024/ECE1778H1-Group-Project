@@ -1,6 +1,5 @@
-// Local mock data for recipes used by the example pages under (tabs)
-// Purpose: provide in-memory sample recipes so pages render meaningful content
-// TODO: replace with API calls / persistent storage when backend is ready
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export type Recipe = {
   id: string;
   title: string;
@@ -13,44 +12,46 @@ export type Recipe = {
   steps: string[];
 };
 
-export const MOCK_RECIPES: Recipe[] = [
-  {
-    id: '1',
-    title: 'Spaghetti Carbonara',
-    author: 'Chef Mock',
-    image: 'https://images.unsplash.com/photo-1604908177522-6e9f0a2d6a1a?w=800&q=80',
-    duration: '25 mins',
-    servings: 2,
-    description: 'A quick and creamy carbonara with pancetta and parmesan.',
-    ingredients: [
-      '200g spaghetti',
-      '100g pancetta',
-      '2 large eggs',
-      '50g parmesan',
-      'Salt',
-      'Pepper',
-    ],
-    steps: [
-      'Boil the pasta in salted water until al dente.',
-      'Fry pancetta until crispy.',
-      'Whisk eggs and parmesan together.',
-      'Drain pasta and combine quickly with egg mixture and pancetta off the heat.',
-      'Serve immediately with extra parmesan and pepper.',
-    ],
-  },
-  {
-    id: '2',
-    title: 'Avocado Toast',
-    author: 'Simple Eats',
-    image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&q=80',
-    duration: '10 mins',
-    servings: 1,
-    description: 'Healthy and fast breakfast with smashed avocado and lemon.',
-    ingredients: ['1 slice sourdough', '1/2 avocado', '1/2 lemon', 'Salt', 'Chili flakes'],
-    steps: [
-      'Toast bread.',
-      'Smash avocado with lemon and salt.',
-      'Spread on toast and sprinkle chili flakes.',
-    ],
-  },
-];
+const STORAGE_KEY = '@user_created_recipes_v1';
+
+// in-memory array exported for existing code to consume
+export const MOCK_RECIPES: Recipe[] = [];
+
+// load persisted user-created recipes on module init
+(async () => {
+  try {
+    const raw = await AsyncStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        // prepend loaded recipes so they appear first (preserve previous behavior)
+        MOCK_RECIPES.unshift(...parsed);
+      }
+    }
+  } catch (e) {
+    // ignore load errors in dev
+  }
+})();
+
+// helper to persist current MOCK_RECIPES (only user-created items are stored here)
+async function persist() {
+  try {
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_RECIPES));
+  } catch (e) {
+    // ignore persistence errors for now
+  }
+}
+
+// exported helper to add a recipe and persist immediately
+export async function addMockRecipe(r: Recipe) {
+  MOCK_RECIPES.unshift(r);
+  await persist();
+}
+
+// exported helper to clear persisted user recipes (dev)
+export async function clearMockRecipes() {
+  MOCK_RECIPES.length = 0;
+  try {
+    await AsyncStorage.removeItem(STORAGE_KEY);
+  } catch {}
+}

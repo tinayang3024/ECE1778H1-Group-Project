@@ -91,14 +91,14 @@ export default function TabPersonalScreen() {
             }}
           />
         </View>
-        <View style={{ marginTop: 8, flexDirection: 'row', gap: 12, alignItems: 'center' }}>
-          <Pressable
+        <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+          {/* <Pressable
             onPress={() => sendTestNotification()}
             style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1, padding: 8, flexDirection: 'row', alignItems: 'center' }]}
           >
             <Ionicons name="send" size={20} color="#111" />
             <Text style={{ marginLeft: 8 }}>Test notification</Text>
-          </Pressable>
+          </Pressable> */}
           <Text style={{ marginLeft: 8, color: '#666' }}>
             Permission: {permissionStatus ?? 'unknown'}
           </Text>
