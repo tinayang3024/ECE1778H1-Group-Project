@@ -102,7 +102,7 @@ export default function TabPersonalScreen() {
             <Text style={{ marginLeft: 8 }}>Test notification</Text>
           </Pressable> */}
           <Text style={{ marginLeft: 8, color: '#666' }}>
-            Permission: {permissionStatus ?? 'unknown'}
+            {/* Permission: {permissionStatus ?? 'unknown'} */}
           </Text>
         </View>
       </View>

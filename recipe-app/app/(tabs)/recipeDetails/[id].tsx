@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Button,
   Pressable,
   Share,
   Image,
@@ -29,7 +28,6 @@ export default function RecipeDetailsId() {
 
   const [recipe, setRecipe] = useState<any | null>(() => {
     if (!id) return null;
-    // if it's a locally authored/mock recipe, keep it as-is
     const local = MOCK_RECIPES.find((r) => r.id === id);
     return local ?? null;
   });
@@ -37,14 +35,11 @@ export default function RecipeDetailsId() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // set a friendly header title
     (navigation as any).setOptions?.({ title: 'Recipe Details' });
 
     let cancelled = false;
 
     async function fetchById(mealId: string) {
-      console.log('[RecipeDetails:id] fetchById start', mealId);
-      console.log('openedFrom this page', openedFrom);
       setLoading(true);
       setError(null);
       try {
@@ -60,21 +55,17 @@ export default function RecipeDetailsId() {
         const mapped = mapMealToDetail(meal);
         if (!cancelled) setRecipe(mapped);
       } catch (e: any) {
-        console.log('[RecipeDetails:id] fetch error', e);
         if (!cancelled) setError('Failed to load recipe');
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
-    // react to id changes: if id corresponds to a local mock, use it; otherwise fetch remote
-    console.log('[RecipeDetails:id] effect id=', id, 'currentRecipeId=', recipe?.id);
     if (!id) {
       setLoading(false);
     } else if (recipe && recipe.id === id) {
       setLoading(false);
     } else {
-      // try local mock first
       const local = MOCK_RECIPES.find((r) => r.id === id);
       if (local) {
         setRecipe(local);
@@ -91,17 +82,6 @@ export default function RecipeDetailsId() {
   }, [id]);
 
   const collected = recipe ? isCollected(recipe.id) : false;
-
-  function toggleLikeHandler() {
-    if (!recipe) return;
-    const full = {
-      id: recipe.id,
-      title: recipe.title,
-      imageUrl: recipe.image,
-      instructions: recipe.instructions,
-    };
-    toggleLike(full);
-  }
 
   const handleShare = async () => {
     if (!recipe) return;
@@ -128,16 +108,15 @@ export default function RecipeDetailsId() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {/* floating back button */}
       <Pressable
         style={styles.backButton}
         onPress={() => {
-          // If we know the details screen was opened from Personal Collection, return there.
           if (openedFrom === 'personal') {
             router.replace('/(tabs)/personalCollection');
             return;
           }
 
-          // Otherwise try to go back in the navigation stack, then fallback to dashboard.
           if (navigation && (navigation as any).canGoBack && (navigation as any).canGoBack()) {
             (navigation as any).goBack();
             return;
@@ -146,15 +125,14 @@ export default function RecipeDetailsId() {
           router.replace('/(tabs)');
         }}
       >
-        <Ionicons name="arrow-back" size={24} color="#333" />
+        <Ionicons name="arrow-back" size={22} color="#0f172a" />
       </Pressable>
 
       {loading ? (
-        <View style={{ paddingVertical: 24 }}>
+        <View style={styles.loadingBox}>
           <ActivityIndicator />
         </View>
       ) : error || !recipe ? (
-        // Fallback UI when loading failed or recipe is missing
         <View style={styles.fallbackContainer}>
           <Text style={styles.fallbackTitle}>
             Oops, looks like this recipe is under investigation.
@@ -162,114 +140,205 @@ export default function RecipeDetailsId() {
           <Text style={styles.fallbackSub}>Please check back later :)</Text>
         </View>
       ) : (
-        <>
+        <View style={styles.card}>
           {recipe.image ? (
             <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="cover" />
           ) : null}
 
-          <Text style={styles.title}>{recipe.title}</Text>
+          <View style={styles.headerSection}>
+            <Text style={styles.title}>{recipe.title}</Text>
 
-          {(() => {
-            const parts: string[] = [];
-            if (recipe.author) parts.push(recipe.author);
-            if (recipe.duration) parts.push(recipe.duration);
-            if (typeof recipe.servings !== 'undefined' && recipe.servings !== null)
-              parts.push(`Serves ${recipe.servings}`);
-            if (parts.length > 0) return <Text style={styles.meta}>{parts.join(' • ')}</Text>;
-            return null;
-          })()}
+            {(() => {
+              const parts: string[] = [];
+              if (recipe.author) parts.push(recipe.author);
+              if (recipe.duration) parts.push(recipe.duration);
+              if (typeof recipe.servings !== 'undefined' && recipe.servings !== null)
+                parts.push(`Serves ${recipe.servings}`);
+              if (parts.length > 0) return <Text style={styles.meta}>{parts.join(' • ')}</Text>;
+              return null;
+            })()}
 
-          {recipe.id ? <Text style={styles.small}>ID: {recipe.id}</Text> : null}
+            {recipe.id ? <Text style={styles.small}>ID: {recipe.id}</Text> : null}
+          </View>
 
           {recipe.description || recipe.instructions ? (
-            <>
+            <View style={styles.section}>
               <Text style={styles.sectionTitle}>Description</Text>
               <Text style={styles.paragraph}>{recipe.description ?? recipe.instructions}</Text>
-            </>
+            </View>
           ) : null}
 
           {recipe.ingredients && (recipe.ingredients as any[]).length > 0 ? (
-            <>
+            <View style={styles.section}>
               <Text style={styles.sectionTitle}>Ingredients</Text>
               {(recipe.ingredients as string[]).map((ing: string, idx: number) => (
                 <Text key={idx} style={styles.listItem}>
                   • {ing}
                 </Text>
               ))}
-            </>
+            </View>
           ) : null}
 
           {recipe.steps && (recipe.steps as any[]).length > 0 ? (
-            <>
+            <View style={styles.section}>
               <Text style={styles.sectionTitle}>Steps</Text>
               {((recipe.steps ?? []) as string[]).map((s: string, idx: number) => (
                 <Text key={idx} style={styles.listItem}>
-                  {s}
+                  {idx + 1}. {s}
                 </Text>
               ))}
-            </>
+            </View>
           ) : null}
-        </>
+
+          <View style={styles.actionRow}>
+            <Pressable
+              onPress={handleToggleLike}
+              style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
+            >
+              <Ionicons
+                name={collected ? 'heart' : 'heart-outline'}
+                size={20}
+                color={collected ? '#e02424' : '#0f172a'}
+              />
+              <Text style={styles.iconButtonText}>{collected ? 'Unlike' : 'Like'}</Text>
+            </Pressable>
+
+            <Pressable
+              onPress={handleShare}
+              style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
+            >
+              <Ionicons name="share-outline" size={20} color="#0f172a" />
+              <Text style={styles.iconButtonText}>Share</Text>
+            </Pressable>
+          </View>
+        </View>
       )}
-
-      <View style={styles.actionRow}>
-        <Pressable
-          onPress={handleToggleLike}
-          style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
-          accessibilityRole="button"
-          accessibilityLabel={collected ? 'Unlike recipe' : 'Like recipe'}
-          testID={`like-button-${recipe?.id ?? 'noid'}`}
-        >
-          <Ionicons
-            name={collected ? 'heart' : 'heart-outline'}
-            size={20}
-            color={collected ? '#e02424' : '#333'}
-          />
-          <Text style={styles.iconButtonText}>{collected ? 'Unlike' : 'Like'}</Text>
-        </Pressable>
-
-        <Pressable
-          onPress={handleShare}
-          style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
-          accessibilityRole="button"
-          accessibilityLabel="Share recipe link"
-          testID={`share-button-${recipe?.id ?? 'noid'}`}
-        >
-          <Ionicons name="share-outline" size={20} color="#333" />
-          <Text style={styles.iconButtonText}>Share</Text>
-        </Pressable>
-      </View>
-
-      <Text style={styles.note}>TODO: centralize mapping & persist collections</Text>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
-  title: { fontSize: 22, fontWeight: '700', marginBottom: 6 },
-  meta: { color: '#666', marginBottom: 12 },
-  sectionTitle: { marginTop: 12, fontWeight: '600' },
-  paragraph: { marginTop: 6, color: '#333' },
-  listItem: { marginTop: 6, color: '#333' },
-  note: { marginTop: 16, color: '#666', fontSize: 12 },
-  small: { color: '#888', fontSize: 12, marginBottom: 8 },
-  buttonRow: { marginTop: 12 },
-  backButton: { padding: 6, borderRadius: 20, backgroundColor: '#f3f4f6' },
-  image: { width: '100%', height: 220, borderRadius: 8, marginBottom: 12 },
-  fallbackContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-  fallbackTitle: { fontSize: 18, fontWeight: '700', marginBottom: 8, textAlign: 'center' },
-  fallbackSub: { color: '#666', textAlign: 'center' },
-  actionRow: { flexDirection: 'row', marginTop: 12 },
+  container: {
+    padding: 16,
+    paddingBottom: 32,
+    backgroundColor: '#f1f5f9',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  image: {
+    width: '100%',
+    height: 220,
+  },
+  headerSection: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 2,
+    color: '#0f172a',
+  },
+  meta: {
+    color: '#64748b',
+    marginBottom: 6,
+  },
+  small: {
+    color: '#94a3b8',
+    fontSize: 12,
+    marginBottom: 10,
+  },
+  section: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
+  },
+  sectionTitle: {
+    fontWeight: '600',
+    fontSize: 16,
+    marginBottom: 6,
+    color: '#0f172a',
+  },
+  paragraph: {
+    color: '#1e293b',
+    lineHeight: 20,
+  },
+  listItem: {
+    color: '#1e293b',
+    marginBottom: 4,
+    paddingLeft: 4,
+  },
+  actionRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 14,
+    gap: 10,
+  },
   iconButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    backgroundColor: '#e2e8f0',
     paddingHorizontal: 12,
-    borderRadius: 8,
-    backgroundColor: '#f3f4f6',
-    marginRight: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
   },
-  iconButtonPressed: { opacity: 0.85 },
-  iconButtonText: { marginLeft: 8, fontWeight: '600' },
+  iconButtonPressed: {
+    opacity: 0.85,
+  },
+  iconButtonText: {
+    marginLeft: 6,
+    fontWeight: '600',
+    color: '#0f172a',
+  },
+  backButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 18,
+    left: 18,
+    zIndex: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  loadingBox: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+  },
+  fallbackContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+  },
+  fallbackTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  fallbackSub: { color: '#64748b', textAlign: 'center' },
+  note: {
+    paddingHorizontal: 16,
+    marginTop: 4,
+    marginBottom: 8,
+    color: '#94a3b8',
+    fontSize: 12,
+  },
 });

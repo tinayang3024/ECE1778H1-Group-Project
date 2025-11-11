@@ -229,8 +229,6 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
         if (!json.meals) {
           setRemoteRecipes([]);
         } else {
-          console.log(json.meals.map(mealToRecipeData));
-          console.log('hihihihihihi');
           setRemoteRecipes(json.meals.map(mealToRecipeData));
         }
       } catch (err: any) {
