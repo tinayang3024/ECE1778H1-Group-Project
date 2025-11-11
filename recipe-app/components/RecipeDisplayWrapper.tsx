@@ -365,6 +365,14 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
       : selectedField === 'area'
       ? areaOptions
       : ingredientOptions;
+  
+  useEffect(() => {
+    setFilterValue(selectedField === 'category'
+      ? categoryOptions? categoryOptions[0] : ''
+      : selectedField === 'area'
+      ? areaOptions? areaOptions[0] : ''
+      : ingredientOptions? ingredientOptions[0] : '');
+  },[selectedField])
 
   // ----------------------------------------------------
   // Refresh random (ONLY when no external data)

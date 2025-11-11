@@ -63,11 +63,17 @@ export default function TabPersonalCollectionScreen() {
   return (
     <View style={styles.container}>
       {data.length === 0 ? (
-        <View style={styles.empty}>
-          <Text style={styles.emptyText}>You haven't liked any recipes yet.</Text>
+        <View style={styles.emptyCard}>
+          <Text style={styles.emptyEmoji}>🍽️</Text>
+          <Text style={styles.emptyTitle}>No liked recipes yet</Text>
+          <Text style={styles.emptySubtitle}>
+            Start exploring and tap ❤️ on your favorite dishes!
+          </Text>
         </View>
       ) : (
-        <RecipeDisplayWrapper data={data} />
+        <View style={styles.listWrapper}>
+          <RecipeDisplayWrapper data={data} />
+        </View>
       )}
     </View>
   );
@@ -102,5 +108,45 @@ const styles = StyleSheet.create({
     height: 1,
     width: '100%',
     backgroundColor: '#eee',
+  },
+  listWrapper: {
+    flex: 1,
+    borderRadius: 12,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+    paddingVertical: 8,
+  },
+  emptyCard: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 24,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    marginTop: 60,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+  },
+  emptyEmoji: {
+    fontSize: 48,
+    marginBottom: 8,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 4,
+  },
+  emptySubtitle: {
+    fontSize: 15,
+    color: "#777",
+    textAlign: "center",
   },
 });
