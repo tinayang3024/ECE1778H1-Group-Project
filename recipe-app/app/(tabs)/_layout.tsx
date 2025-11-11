@@ -32,7 +32,7 @@ export default function TabLayout() {
               size={TAB_ICON_SIZE}
               color={color}
             />
-          )
+          ),
         }}
       />
       <Tabs.Screen

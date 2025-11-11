@@ -56,9 +56,7 @@
     "experiments": {
       "typedRoutes": true
     },
-    "deepLinks": [
-      "recipe/*"
-    ],
+    "deepLinks": ["recipe/*"],
     "extra": {
       "router": {},
       "eas": {

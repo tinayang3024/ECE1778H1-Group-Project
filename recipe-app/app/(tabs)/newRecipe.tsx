@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, Pressable, Image as RNImage } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Pressable,
+  Image as RNImage,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { MOCK_RECIPES, addMockRecipe, type Recipe } from './_mockRecipes';
@@ -57,10 +65,16 @@ export default function NewRecipe() {
     if (!duration.trim()) next.duration = 'Duration is missing';
     const srvErr = validateServingsValue(servings);
     if (srvErr) next.servings = srvErr;
-    const ingList = ingredients.split('\n').map((s) => s.trim()).filter(Boolean);
-    if (ingList.length === 0) next.ingredients = 'Don\'t forget to add ingredients!';
-    const stepList = steps.split('\n').map((s) => s.trim()).filter(Boolean);
-    if (stepList.length === 0) next.steps = 'Don\'t forget to add steps!';
+    const ingList = ingredients
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (ingList.length === 0) next.ingredients = "Don't forget to add ingredients!";
+    const stepList = steps
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (stepList.length === 0) next.steps = "Don't forget to add steps!";
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -143,15 +157,31 @@ export default function NewRecipe() {
     if (!author.trim()) return false;
     if (!duration.trim()) return false;
     if (!servings.trim()) return false;
-    if (!ingredients.split('\n').map((s) => s.trim()).filter(Boolean).length) return false;
-    if (!steps.split('\n').map((s) => s.trim()).filter(Boolean).length) return false;
+    if (
+      !ingredients
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean).length
+    )
+      return false;
+    if (
+      !steps
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean).length
+    )
+      return false;
     if (validateServingsValue(servings)) return false;
     return true;
   };
 
   return saved ? (
     <View style={styles.successContainer}>
-      <Pressable style={styles.backButtonTop} onPress={resetForm} android_ripple={{ color: '#eee' }}>
+      <Pressable
+        style={styles.backButtonTop}
+        onPress={resetForm}
+        android_ripple={{ color: '#eee' }}
+      >
         <Ionicons name="arrow-back" size={22} color="#333" />
       </Pressable>
       <Ionicons name="checkmark-circle" size={140} color="#10b981" />
@@ -172,7 +202,15 @@ export default function NewRecipe() {
       </Pressable>
       <Text style={styles.title}>Create a New Recipe</Text>
 
-      <TextInput placeholder="Title" style={styles.input} value={title} onChangeText={(val) => { setTitle(val); setErrors((e) => ({ ...e, title: val.trim() ? null : 'Title is required' })); }} />
+      <TextInput
+        placeholder="Title"
+        style={styles.input}
+        value={title}
+        onChangeText={(val) => {
+          setTitle(val);
+          setErrors((e) => ({ ...e, title: val.trim() ? null : 'Title is required' }));
+        }}
+      />
       {errors.title ? <Text style={styles.errText}>{errors.title}</Text> : null}
 
       <TextInput
@@ -183,10 +221,26 @@ export default function NewRecipe() {
         multiline
       />
 
-      <TextInput placeholder="Author" style={styles.input} value={author} onChangeText={(val) => { setAuthor(val); setErrors((e) => ({ ...e, author: val.trim() ? null : 'Author is required' })); }} />
+      <TextInput
+        placeholder="Author"
+        style={styles.input}
+        value={author}
+        onChangeText={(val) => {
+          setAuthor(val);
+          setErrors((e) => ({ ...e, author: val.trim() ? null : 'Author is required' }));
+        }}
+      />
       {errors.author ? <Text style={styles.errText}>{errors.author}</Text> : null}
 
-      <TextInput placeholder="Duration (e.g. 20 mins)" style={styles.input} value={duration} onChangeText={(val) => { setDuration(val); setErrors((e) => ({ ...e, duration: val.trim() ? null : 'Duration is required' })); }} />
+      <TextInput
+        placeholder="Duration (e.g. 20 mins)"
+        style={styles.input}
+        value={duration}
+        onChangeText={(val) => {
+          setDuration(val);
+          setErrors((e) => ({ ...e, duration: val.trim() ? null : 'Duration is required' }));
+        }}
+      />
       {errors.duration ? <Text style={styles.errText}>{errors.duration}</Text> : null}
 
       <TextInput
@@ -209,8 +263,14 @@ export default function NewRecipe() {
         value={ingredients}
         onChangeText={(val) => {
           setIngredients(val);
-          const lst = val.split('\n').map((s) => s.trim()).filter(Boolean);
-          setErrors((e) => ({ ...e, ingredients: lst.length ? null : 'Please provide at least one ingredient' }));
+          const lst = val
+            .split('\n')
+            .map((s) => s.trim())
+            .filter(Boolean);
+          setErrors((e) => ({
+            ...e,
+            ingredients: lst.length ? null : 'Please provide at least one ingredient',
+          }));
         }}
         multiline
       />
@@ -223,8 +283,14 @@ export default function NewRecipe() {
         value={steps}
         onChangeText={(val) => {
           setSteps(val);
-          const lst = val.split('\n').map((s) => s.trim()).filter(Boolean);
-          setErrors((e) => ({ ...e, steps: lst.length ? null : 'Please provide at least one step' }));
+          const lst = val
+            .split('\n')
+            .map((s) => s.trim())
+            .filter(Boolean);
+          setErrors((e) => ({
+            ...e,
+            steps: lst.length ? null : 'Please provide at least one step',
+          }));
         }}
         multiline
       />

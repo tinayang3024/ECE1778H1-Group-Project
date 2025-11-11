@@ -78,7 +78,9 @@ export default function TabPersonalScreen() {
       {/* Notifications Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Notifications</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}
+        >
           <Text>Daily recipe reminder</Text>
           <Switch
             value={!!isOptedIn}

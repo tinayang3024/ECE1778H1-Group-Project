@@ -22,7 +22,7 @@ export default function RecipeDisplayItem({ recipe }: Props) {
       pathname: '/(tabs)/recipeDetails/[id]',
       params: { id: recipe.id, from: fromParam },
     });
-   };
+  };
 
   return (
     <Pressable

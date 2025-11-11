@@ -3,12 +3,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { useAuth } from '../context/AuthContext';
 
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import { GoogleSignInHandler } from '../components/SignInHandler';
-
 
 const GOOGLE_CLIENT_ID_WEBAPP =
   '590532636165-qup3d4tbpbl7fe255edokd2snr88sqid.apps.googleusercontent.com';
@@ -33,7 +29,7 @@ WebBrowser.maybeCompleteAuthSession();
 export default function LoginScreen() {
   const { login } = useAuth();
   const onPressGoogle = async () => {
-    await GoogleSignInHandler(login); 
+    await GoogleSignInHandler(login);
   };
 
   return (

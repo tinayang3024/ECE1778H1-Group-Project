@@ -21,7 +21,9 @@ const NotificationContext = createContext<NotificationCtx | undefined>(undefined
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isOptedIn, setIsOptedIn] = useState<boolean>(false);
-  const [permissionStatus, setPermissionStatus] = useState<Notifications.PermissionStatus | null>(null);
+  const [permissionStatus, setPermissionStatus] = useState<Notifications.PermissionStatus | null>(
+    null,
+  );
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>(undefined);
 
   // Show notifications while app is foregrounded
@@ -112,14 +114,15 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
 
     // schedule local daily notification at 18:00 (6pm)
-    const trigger: Notifications.NotificationTriggerInput = Platform.OS === 'android'
-      ? { hour: 18, minute: 0, repeats: true, channelId: 'daily-reminder' }
-      : { hour: 18, minute: 0, repeats: true };
+    const trigger: Notifications.NotificationTriggerInput =
+      Platform.OS === 'android'
+        ? { hour: 18, minute: 0, repeats: true, channelId: 'daily-reminder' }
+        : { hour: 18, minute: 0, repeats: true };
 
     const id = await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Dinner ideas 🍽️",
-        body: "Check the app for dinner recipe inspirations — tap to explore!",
+        title: 'Dinner ideas 🍽️',
+        body: 'Check the app for dinner recipe inspirations — tap to explore!',
         data: { screen: '/(tabs)/' },
       },
       trigger,

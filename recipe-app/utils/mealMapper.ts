@@ -38,7 +38,10 @@ export function mealToRecipeData(meal: any) {
     }
   }
 
-  const tags = typeof meal.strTags === 'string' && meal.strTags.length > 0 ? meal.strTags.split(',').map((t: string) => t.trim()) : [];
+  const tags =
+    typeof meal.strTags === 'string' && meal.strTags.length > 0
+      ? meal.strTags.split(',').map((t: string) => t.trim())
+      : [];
 
   return {
     id: meal.idMeal,
@@ -88,7 +91,9 @@ export function mapMealToDetail(meal: any): MappedRecipe {
     author: meal.strSource ?? meal.strArea ?? meal.strCategory ?? undefined,
     duration: undefined,
     servings: undefined,
-    description: meal.strTags ? `${meal.strCategory ?? ''} • ${meal.strArea ?? ''}` : meal.strCategory ?? meal.strArea ?? '',
+    description: meal.strTags
+      ? `${meal.strCategory ?? ''} • ${meal.strArea ?? ''}`
+      : (meal.strCategory ?? meal.strArea ?? ''),
     ingredients,
     steps,
     instructions: meal.strInstructions ?? '',

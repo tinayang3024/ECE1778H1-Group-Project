@@ -170,12 +170,15 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
         const ingJson = await ingRes.json();
 
         if (!cancelled) {
-          const cats =
-            Array.isArray(catJson.meals) ? catJson.meals.map((m: any) => m.strCategory) : [];
-          const areas =
-            Array.isArray(areaJson.meals) ? areaJson.meals.map((m: any) => m.strArea) : [];
-          const ings =
-            Array.isArray(ingJson.meals) ? ingJson.meals.map((m: any) => m.strIngredient) : [];
+          const cats = Array.isArray(catJson.meals)
+            ? catJson.meals.map((m: any) => m.strCategory)
+            : [];
+          const areas = Array.isArray(areaJson.meals)
+            ? areaJson.meals.map((m: any) => m.strArea)
+            : [];
+          const ings = Array.isArray(ingJson.meals)
+            ? ingJson.meals.map((m: any) => m.strIngredient)
+            : [];
 
           setCategoryOptions(cats.filter(Boolean));
           setAreaOptions(areas.filter(Boolean));
@@ -363,16 +366,24 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
     selectedField === 'category'
       ? categoryOptions
       : selectedField === 'area'
-      ? areaOptions
-      : ingredientOptions;
-  
+        ? areaOptions
+        : ingredientOptions;
+
   useEffect(() => {
-    setFilterValue(selectedField === 'category'
-      ? categoryOptions? categoryOptions[0] : ''
-      : selectedField === 'area'
-      ? areaOptions? areaOptions[0] : ''
-      : ingredientOptions? ingredientOptions[0] : '');
-  },[selectedField])
+    setFilterValue(
+      selectedField === 'category'
+        ? categoryOptions
+          ? categoryOptions[0]
+          : ''
+        : selectedField === 'area'
+          ? areaOptions
+            ? areaOptions[0]
+            : ''
+          : ingredientOptions
+            ? ingredientOptions[0]
+            : '',
+    );
+  }, [selectedField]);
 
   // ----------------------------------------------------
   // Refresh random (ONLY when no external data)

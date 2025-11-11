@@ -94,7 +94,12 @@ export default function RecipeDetailsId() {
 
   function toggleLikeHandler() {
     if (!recipe) return;
-    const full = { id: recipe.id, title: recipe.title, imageUrl: recipe.image, instructions: recipe.instructions };
+    const full = {
+      id: recipe.id,
+      title: recipe.title,
+      imageUrl: recipe.image,
+      instructions: recipe.instructions,
+    };
     toggleLike(full);
   }
 
@@ -151,12 +156,16 @@ export default function RecipeDetailsId() {
       ) : error || !recipe ? (
         // Fallback UI when loading failed or recipe is missing
         <View style={styles.fallbackContainer}>
-          <Text style={styles.fallbackTitle}>Oops, looks like this recipe is under investigation.</Text>
+          <Text style={styles.fallbackTitle}>
+            Oops, looks like this recipe is under investigation.
+          </Text>
           <Text style={styles.fallbackSub}>Please check back later :)</Text>
         </View>
       ) : (
         <>
-          {recipe.image ? <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="cover" /> : null}
+          {recipe.image ? (
+            <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="cover" />
+          ) : null}
 
           <Text style={styles.title}>{recipe.title}</Text>
 
@@ -164,34 +173,39 @@ export default function RecipeDetailsId() {
             const parts: string[] = [];
             if (recipe.author) parts.push(recipe.author);
             if (recipe.duration) parts.push(recipe.duration);
-            if (typeof recipe.servings !== 'undefined' && recipe.servings !== null) parts.push(`Serves ${recipe.servings}`);
+            if (typeof recipe.servings !== 'undefined' && recipe.servings !== null)
+              parts.push(`Serves ${recipe.servings}`);
             if (parts.length > 0) return <Text style={styles.meta}>{parts.join(' • ')}</Text>;
             return null;
           })()}
 
           {recipe.id ? <Text style={styles.small}>ID: {recipe.id}</Text> : null}
 
-          {(recipe.description || recipe.instructions) ? (
+          {recipe.description || recipe.instructions ? (
             <>
               <Text style={styles.sectionTitle}>Description</Text>
               <Text style={styles.paragraph}>{recipe.description ?? recipe.instructions}</Text>
             </>
           ) : null}
 
-          {(recipe.ingredients && (recipe.ingredients as any[]).length > 0) ? (
+          {recipe.ingredients && (recipe.ingredients as any[]).length > 0 ? (
             <>
               <Text style={styles.sectionTitle}>Ingredients</Text>
               {(recipe.ingredients as string[]).map((ing: string, idx: number) => (
-                <Text key={idx} style={styles.listItem}>• {ing}</Text>
+                <Text key={idx} style={styles.listItem}>
+                  • {ing}
+                </Text>
               ))}
             </>
           ) : null}
 
-          {(recipe.steps && (recipe.steps as any[]).length > 0) ? (
+          {recipe.steps && (recipe.steps as any[]).length > 0 ? (
             <>
               <Text style={styles.sectionTitle}>Steps</Text>
               {((recipe.steps ?? []) as string[]).map((s: string, idx: number) => (
-                <Text key={idx} style={styles.listItem}>{s}</Text>
+                <Text key={idx} style={styles.listItem}>
+                  {s}
+                </Text>
               ))}
             </>
           ) : null}
@@ -206,7 +220,11 @@ export default function RecipeDetailsId() {
           accessibilityLabel={collected ? 'Unlike recipe' : 'Like recipe'}
           testID={`like-button-${recipe?.id ?? 'noid'}`}
         >
-          <Ionicons name={collected ? 'heart' : 'heart-outline'} size={20} color={collected ? '#e02424' : '#333'} />
+          <Ionicons
+            name={collected ? 'heart' : 'heart-outline'}
+            size={20}
+            color={collected ? '#e02424' : '#333'}
+          />
           <Text style={styles.iconButtonText}>{collected ? 'Unlike' : 'Like'}</Text>
         </Pressable>
 
