@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   Pressable,
-  Share,
   Image,
   ActivityIndicator,
 } from 'react-native';
@@ -16,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { MOCK_RECIPES } from '../_mockRecipes';
 import { mapMealToDetail } from '../../../utils/mealMapper';
 import * as Linking from 'expo-linking';
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system/legacy';
 
 export default function RecipeDetailsId() {
   const router = useRouter();
@@ -83,12 +84,57 @@ export default function RecipeDetailsId() {
 
   const collected = recipe ? isCollected(recipe.id) : false;
 
+  // const handleShare = async () => {
+  //   if (!recipe) return;
+
+  //   try {
+  //     // this is the deep link we want to share
+  //     const deepLink = Linking.createURL(`/recipe/${recipe.id}`, { scheme: 'recipeapp' });
+  //     const message = `Check out this recipe 🍝: ${recipe.title}\n\n${deepLink}`;
+
+  //     // 1) try expo-sharing first (project requirement)
+  //     const canShare = await Sharing.isAvailableAsync();
+  //     if (canShare) {
+  //       // expo-sharing prefers sharing a file/URL; we can pass the URL directly
+  //       await Sharing.shareAsync(deepLink, {
+  //         dialogTitle: `Share recipe: ${recipe.title}`,
+  //         mimeType: 'text/plain',
+  //       });
+  //       return;
+  //     }
+
+  //     // 2) fallback to react-native Share if expo-sharing is not available
+  //     await Share.share({ message, title: `Share recipe: ${recipe.title}` });
+  //   } catch (err) {
+  //     console.log('[RecipeDetails:id] share error', err);
+  //   }
+  // };
   const handleShare = async () => {
     if (!recipe) return;
+
     try {
       const deepLink = Linking.createURL(`/recipe/${recipe.id}`, { scheme: 'recipeapp' });
       const message = `Check out this recipe 🍝: ${recipe.title}\n\n${deepLink}`;
-      await Share.share({ message, title: `Share recipe: ${recipe.title}` });
+
+      const canShare = await Sharing.isAvailableAsync();
+      if (!canShare) {
+        console.warn('expo-sharing not available on this device.');
+        return;
+      }
+
+      const fileUri = FileSystem.cacheDirectory + `recipe-${recipe.id}.txt`;
+
+      // legacy API is allowed here
+      await FileSystem.writeAsStringAsync(fileUri, message);
+
+      await Sharing.shareAsync(fileUri, {
+        dialogTitle: `Share recipe: ${recipe.title}`,
+        mimeType: 'text/plain',
+        UTI: 'public.text',
+      });
+
+      // optional cleanup
+      await FileSystem.deleteAsync(fileUri, { idempotent: true });
     } catch (err) {
       console.log('[RecipeDetails:id] share error', err);
     }
@@ -334,11 +380,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   fallbackSub: { color: '#64748b', textAlign: 'center' },
-  note: {
-    paddingHorizontal: 16,
-    marginTop: 4,
-    marginBottom: 8,
-    color: '#94a3b8',
-    fontSize: 12,
-  },
 });
