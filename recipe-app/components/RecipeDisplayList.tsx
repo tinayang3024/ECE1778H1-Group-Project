@@ -7,9 +7,10 @@ import { RecipeData } from '../utils/types';
 type ListProps = {
   data: RecipeData[];
   style?: ViewStyle;
+  loadingState: boolean;
 };
 
-export default function RecipeDisplayList({ data, style }: ListProps) {
+export default function RecipeDisplayList({ data, style, loadingState }: ListProps) {
   return (
     <View style={[styles.container, style]}>
       <FlatList
@@ -19,7 +20,7 @@ export default function RecipeDisplayList({ data, style }: ListProps) {
         contentContainerStyle={{ paddingBottom: 16 }}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>No recipes to display.</Text>
+            {!loadingState && <Text style={styles.emptyText}>No recipes to display.</Text>}
           </View>
         }
       />

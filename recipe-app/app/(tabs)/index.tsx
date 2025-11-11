@@ -1,9 +1,7 @@
 import { StyleSheet, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons'; // 👈 Add Expo Icons
-import RecipeDisplayList from '@/components/RecipeDisplayList';
-import { MOCK_RECIPE_LIST } from '@/utils/mockData';
+import { Ionicons } from '@expo/vector-icons';
 import RecipeDisplayWrapper from '@/components/RecipeDisplayWrapper';
 
 export default function TabDashboardScreen() {

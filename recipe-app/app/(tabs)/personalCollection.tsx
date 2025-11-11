@@ -1,10 +1,6 @@
-// app/(tabs)/personalCollection.tsx
-import { StyleSheet, Pressable } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import RecipeDisplayList from '@/components/RecipeDisplayList';
-import { MOCK_RECIPE_LIST } from '@/utils/mockData';
 import { useCollected } from '@/context/CollectedContext';
 import { MOCK_RECIPES } from './_mockRecipes';
 import RecipeDisplayWrapper from '@/components/RecipeDisplayWrapper';

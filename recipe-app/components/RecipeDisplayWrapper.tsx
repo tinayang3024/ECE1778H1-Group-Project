@@ -229,6 +229,8 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
         if (!json.meals) {
           setRemoteRecipes([]);
         } else {
+          console.log(json.meals.map(mealToRecipeData));
+          console.log('hihihihihihi');
           setRemoteRecipes(json.meals.map(mealToRecipeData));
         }
       } catch (err: any) {
@@ -371,16 +373,16 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
 
   useEffect(() => {
     setFilterValue(
-      selectedField === 'category'
-        ? categoryOptions
-          ? categoryOptions[0]
+      selectedField === 'ingredient'
+        ? ingredientOptions
+          ? ingredientOptions[0]
           : ''
         : selectedField === 'area'
           ? areaOptions
             ? areaOptions[0]
             : ''
-          : ingredientOptions
-            ? ingredientOptions[0]
+          : categoryOptions
+            ? categoryOptions[0]
             : '',
     );
   }, [selectedField]);
@@ -422,7 +424,8 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
     <View style={[styles.container, style]}>
       {/* Search */}
       <TextInput
-        style={styles.input}
+        // style={styles.input}
+        style={[styles.input, hasFilter && styles.inputDisabled]}
         placeholder="Search by title..."
         value={query}
         onChangeText={setQuery}
@@ -457,7 +460,12 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
         {/* refresh only in online mode */}
         {!hasExternalData && (
           <Pressable onPress={refreshRandom} style={styles.refreshBtn}>
-            <Ionicons name="refresh" size={20} color="#1e90ff" />
+            <Ionicons
+              name="refresh"
+              size={20}
+              color={!hasFilter ? '#1e90ff' : '#414141ff'}
+              disabled={!hasFilter}
+            />
           </Pressable>
         )}
       </View>
@@ -546,7 +554,13 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
             >
               <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
-            <Pressable onPress={addFilter} style={styles.addBtn}>
+            <Pressable
+              onPress={() => {
+                setQuery('');
+                addFilter();
+              }}
+              style={styles.addBtn}
+            >
               <Text style={styles.addBtnText}>Add</Text>
             </Pressable>
           </View>
@@ -558,7 +572,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
         <View style={{ paddingVertical: 18 }}>
           <ActivityIndicator />
           <Text style={{ textAlign: 'center', marginTop: 6, color: '#666' }}>
-            Loading random recipes...
+            Loading recipes...
           </Text>
         </View>
       )}
@@ -586,7 +600,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
       )}
 
       {/* Final list */}
-      <RecipeDisplayList data={listData} />
+      <RecipeDisplayList data={listData} loadingState={showInitialLoading} />
     </View>
   );
 }
@@ -724,4 +738,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   addBtnText: { color: '#fff', fontWeight: '700' },
+  inputDisabled: {
+    backgroundColor: '#f1f1f1', // light gray background
+    color: '#999', // dim text color
+    opacity: 0.7, // slightly faded look
+  },
 });
