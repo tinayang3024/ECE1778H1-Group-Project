@@ -1,29 +1,33 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
+import { Tabs, useRouter } from 'expo-router';
+import { Pressable, View, StyleSheet } from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { TAB_ICON_SIZE } from '@/utils/constants';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
+        tabBarStyle: {
+          height: 70,
+          paddingBottom: 8,
+          paddingTop: 8,
+        },
       }}
     >
+      {/* Left tab — Dashboard */}
       <Tabs.Screen
-        name="index" // filename without the extension
+        name="index"
         options={{
           title: 'Dashboard',
           tabBarIcon: ({ color }) => (
@@ -35,27 +39,46 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="newRecipe"
+        options={{
+          title: '',
+          tabBarLabel: '',
+          tabBarIcon: () => null, 
+          tabBarButton: () => (
+            <Pressable
+              onPress={() => router.push('/newRecipe')}
+              style={({ pressed }) => [
+                styles.plusButtonContainer,
+                pressed && { opacity: 0.85 },
+              ]}
+            >
+              <View style={styles.plusButton}>
+                <FontAwesome6 name="add" size={28} color="#fff" />
+              </View>
+            </Pressable>
+          ),
+        }}
+      />
+
+      {/* Right tab — Profile */}
       <Tabs.Screen
         name="personal"
         options={{
-          title: 'Personal',
+          title: 'Profile',
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="account-circle" size={TAB_ICON_SIZE} color={color} />
           ),
         }}
       />
+
+      {/* Hidden routes */}
       <Tabs.Screen
         name="recipeDetails/[id]"
         options={{
           href: null,
           title: 'Recipe Details',
-        }}
-      />
-      <Tabs.Screen
-        name="newRecipe"
-        options={{
-          href: null,
-          title: 'New Recipe',
         }}
       />
       <Tabs.Screen
@@ -68,3 +91,24 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  plusButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: -18, // lift above the tab bar
+  },
+  plusButton: {
+    width: 58,
+    height: 58,
+    borderRadius: 32,
+    backgroundColor: '#2563eb', // blue – change if needed
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 5,
+  },
+});

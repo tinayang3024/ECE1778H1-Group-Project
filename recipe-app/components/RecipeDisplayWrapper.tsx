@@ -46,11 +46,11 @@ const includesCI = (hay: string | undefined | null, needle: string) => {
 // mapping helpers moved to utils/mealMapper.ts
 
 export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }: Props) {
-  const hasExternalData = typeof data !== 'undefined'; // 👈 key flag
+  const isPersonalCollectionPage = typeof data !== 'undefined'; // 👈 key flag
 
   // base data to show
   const [baseData, setBaseData] = useState<RecipeData[]>(data ?? []);
-  const [loadingRandom, setLoadingRandom] = useState<boolean>(!hasExternalData);
+  const [loadingRandom, setLoadingRandom] = useState<boolean>(!isPersonalCollectionPage);
 
   // search, sort, filters
   const [query, setQuery] = useState(initialQuery);
@@ -80,11 +80,11 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
 
   // sync external data later
   useEffect(() => {
-    if (hasExternalData) {
+    if (isPersonalCollectionPage) {
       setBaseData(data ?? []);
       setLoadingRandom(false);
     }
-  }, [hasExternalData, data]);
+  }, [isPersonalCollectionPage, data]);
 
   // ----------------------------------------------------
   // If NO external data → fetch 20 random on mount
@@ -119,13 +119,13 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   );
 
   useEffect(() => {
-    if (hasExternalData) return; // 👈 DO NOT call random API
+    if (isPersonalCollectionPage) return; // 👈 DO NOT call random API
     const cancelled = { current: false };
     fetchRandomMeals(20, cancelled);
     return () => {
       cancelled.current = true;
     };
-  }, [hasExternalData, fetchRandomMeals]);
+  }, [isPersonalCollectionPage, fetchRandomMeals]);
 
   // ----------------------------------------------------
   // Filter option lists
@@ -134,7 +134,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   // ----------------------------------------------------
   useEffect(() => {
     // case 1: local-only mode (data provided)
-    if (hasExternalData) {
+    if (isPersonalCollectionPage) {
       const cats = new Set<string>();
       const areas = new Set<string>();
       const ings = new Set<string>();
@@ -195,13 +195,13 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
     return () => {
       cancelled = true;
     };
-  }, [hasExternalData, data]);
+  }, [isPersonalCollectionPage, data]);
 
   // ----------------------------------------------------
   // Title search (ONLY when no external data)
   // ----------------------------------------------------
   useEffect(() => {
-    if (hasExternalData) {
+    if (isPersonalCollectionPage) {
       // in local mode, query just filters locally; no API
       return;
     }
@@ -243,7 +243,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [query, filters.length, hasExternalData]);
+  }, [query, filters.length, isPersonalCollectionPage]);
 
   // ----------------------------------------------------
   // Local filtering / sorting
@@ -277,7 +277,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   // Filter fetch (ONLY WHEN no external data)
   // ----------------------------------------------------
   const fetchFilteredMeals = async (field: FilterField, value: string) => {
-    if (hasExternalData) {
+    if (isPersonalCollectionPage) {
       // local-only mode: do NOT call remote filter API
       return;
     }
@@ -334,7 +334,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
     setRemoteRecipes(null);
     setRemoteError(null);
 
-    if (!hasExternalData) {
+    if (!isPersonalCollectionPage) {
       // online mode → fetch from API
       await fetchFilteredMeals(selectedField, trimmed);
     }
@@ -389,7 +389,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   // Refresh random (ONLY when no external data)
   // ----------------------------------------------------
   const refreshRandom = () => {
-    if (hasExternalData) return; // 👈 do nothing
+    if (isPersonalCollectionPage) return; // 👈 do nothing
     setBaseData([]);
     setLoadingRandom(true);
     const cancelled = { current: false };
@@ -401,7 +401,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   // ----------------------------------------------------
   let listData: RecipeData[] = localFilteredSorted;
 
-  if (!hasExternalData) {
+  if (!isPersonalCollectionPage) {
     // only in online mode we consider remote + filter results
     if (hasFilter) {
       listData = filterRecipes ?? [];
@@ -411,7 +411,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   }
 
   const showInitialLoading =
-    !hasExternalData &&
+    !isPersonalCollectionPage &&
     !hasFilter &&
     !query.trim() &&
     baseData.length === 0 &&
@@ -434,56 +434,60 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
       />
 
       {/* Sort + (maybe refresh) */}
-      <View style={styles.sortRow}>
-        <Text style={styles.sortLabel}>Sort:</Text>
+      {!isPersonalCollectionPage && (
+        <View style={styles.sortRow}>
+          <Text style={styles.sortLabel}>Sort:</Text>
 
-        <Pressable
-          onPress={() => setSortOrder('newest')}
-          style={[styles.pill, sortOrder === 'newest' && styles.pillActive]}
-        >
-          <Text style={[styles.pillText, sortOrder === 'newest' && styles.pillTextActive]}>
-            Newest
-          </Text>
-        </Pressable>
-
-        <Pressable
-          onPress={() => setSortOrder('oldest')}
-          style={[styles.pill, sortOrder === 'oldest' && styles.pillActive]}
-        >
-          <Text style={[styles.pillText, sortOrder === 'oldest' && styles.pillTextActive]}>
-            Oldest
-          </Text>
-        </Pressable>
-
-        {/* refresh only in online mode */}
-        {!hasExternalData && (
-          <Pressable onPress={refreshRandom} style={styles.refreshBtn}>
-            <Ionicons
-              name="refresh"
-              size={20}
-              color={!hasFilter ? '#1e90ff' : '#414141ff'}
-              disabled={!hasFilter}
-            />
+          <Pressable
+            onPress={() => setSortOrder('newest')}
+            style={[styles.pill, sortOrder === 'newest' && styles.pillActive]}
+          >
+            <Text style={[styles.pillText, sortOrder === 'newest' && styles.pillTextActive]}>
+              Newest
+            </Text>
           </Pressable>
-        )}
-      </View>
+
+          <Pressable
+            onPress={() => setSortOrder('oldest')}
+            style={[styles.pill, sortOrder === 'oldest' && styles.pillActive]}
+          >
+            <Text style={[styles.pillText, sortOrder === 'oldest' && styles.pillTextActive]}>
+              Oldest
+            </Text>
+          </Pressable>
+
+          {/* refresh only in online mode */}
+          {!isPersonalCollectionPage && (
+            <Pressable onPress={refreshRandom} style={styles.refreshBtn}>
+              <Ionicons
+                name="refresh"
+                size={20}
+                color={!hasFilter ? '#1e90ff' : '#414141ff'}
+                disabled={!hasFilter}
+              />
+            </Pressable>
+          )}
+        </View>
+      )}
 
       {/* Filter row */}
-      <View style={styles.sortRow}>
-        <Text style={styles.sortLabel}>Filter:</Text>
+      {!isPersonalCollectionPage && (
+        <View style={styles.sortRow}>
+          <Text style={styles.sortLabel}>Filter:</Text>
 
-        {filters.length > 0 && (
-          <Pressable onPress={clearAll} style={styles.clearBtn}>
-            <Text style={styles.clearText}>Clear Filter</Text>
-          </Pressable>
-        )}
+          {filters.length > 0 && (
+            <Pressable onPress={clearAll} style={styles.clearBtn}>
+              <Text style={styles.clearText}>Clear Filter</Text>
+            </Pressable>
+          )}
 
-        {filters.length === 0 && (
-          <Pressable onPress={() => setShowBuilder(true)} style={styles.addFilterBtn}>
-            <Text style={styles.addFilterText}>+ Add Filter</Text>
-          </Pressable>
-        )}
-      </View>
+          {filters.length === 0 && (
+            <Pressable onPress={() => setShowBuilder(true)} style={styles.addFilterBtn}>
+              <Text style={styles.addFilterText}>+ Add Filter</Text>
+            </Pressable>
+          )}
+        </View>
+      )}
 
       {/* Active filters */}
       {filters.length > 0 && (
@@ -575,23 +579,23 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
         </View>
       )}
 
-      {loadingRemote && !hasExternalData && !hasFilter && query.trim().length > 0 && (
+      {loadingRemote && !isPersonalCollectionPage && !hasFilter && query.trim().length > 0 && (
         <View style={{ paddingVertical: 12 }}>
           <ActivityIndicator />
         </View>
       )}
-      {remoteError && !hasExternalData && !hasFilter && (
+      {remoteError && !isPersonalCollectionPage && !hasFilter && (
         <View style={{ paddingVertical: 8 }}>
           <Text style={{ color: 'red' }}>{remoteError}</Text>
         </View>
       )}
 
-      {loadingFilterFetch && !hasExternalData && hasFilter && (
+      {loadingFilterFetch && !isPersonalCollectionPage && hasFilter && (
         <View style={{ paddingVertical: 12 }}>
           <ActivityIndicator />
         </View>
       )}
-      {filterError && !hasExternalData && hasFilter && (
+      {filterError && !isPersonalCollectionPage && hasFilter && (
         <View style={{ paddingVertical: 8 }}>
           <Text style={{ color: 'red' }}>{filterError}</Text>
         </View>
@@ -711,7 +715,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   pickerSmall: {
-    height: Platform.OS === 'ios' ? 140 : 36,
+    height: Platform.OS === 'ios' ? 140 : 60,
     fontSize: Platform.OS === 'ios' ? undefined : 12,
     transform: Platform.OS === 'ios' ? [{ scale: 0.85 }] : undefined,
   },

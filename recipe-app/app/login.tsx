@@ -35,7 +35,7 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.subtitle}>Sign in to continue</Text>
+      <Text style={styles.subtitle}>Sign in to explore more recipes</Text>
       <GoogleSigninButton onPress={onPressGoogle} />
     </View>
   );

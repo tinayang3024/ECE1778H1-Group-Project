@@ -9,26 +9,7 @@ export default function TabDashboardScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header Section */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Recipe</Text>
-
-        {/* Icon Button — floating style but aligned with header */}
-        <Pressable
-          style={({ pressed }) => [
-            styles.addButton,
-            pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
-          ]}
-          onPress={() => router.push('/(tabs)/newRecipe')}
-        >
-          <Ionicons name="add" size={24} color="#fff" />
-        </Pressable>
-      </View>
-
-      {/* Separator */}
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-
-      {/* Recipe List */}
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> 
       <View style={{ flex: 1 }}>
         <RecipeDisplayWrapper data={undefined} />
       </View>

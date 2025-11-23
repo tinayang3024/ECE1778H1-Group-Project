@@ -44,7 +44,9 @@ export default function RecipeDetailsId() {
       setLoading(true);
       setError(null);
       try {
-        const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${encodeURIComponent(mealId)}`;
+        const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${encodeURIComponent(
+          mealId
+        )}`;
         const res = await fetch(url);
         const json = await res.json();
         const meal = json?.meals?.[0];
@@ -84,31 +86,6 @@ export default function RecipeDetailsId() {
 
   const collected = recipe ? isCollected(recipe.id) : false;
 
-  // const handleShare = async () => {
-  //   if (!recipe) return;
-
-  //   try {
-  //     // this is the deep link we want to share
-  //     const deepLink = Linking.createURL(`/recipe/${recipe.id}`, { scheme: 'recipeapp' });
-  //     const message = `Check out this recipe 🍝: ${recipe.title}\n\n${deepLink}`;
-
-  //     // 1) try expo-sharing first (project requirement)
-  //     const canShare = await Sharing.isAvailableAsync();
-  //     if (canShare) {
-  //       // expo-sharing prefers sharing a file/URL; we can pass the URL directly
-  //       await Sharing.shareAsync(deepLink, {
-  //         dialogTitle: `Share recipe: ${recipe.title}`,
-  //         mimeType: 'text/plain',
-  //       });
-  //       return;
-  //     }
-
-  //     // 2) fallback to react-native Share if expo-sharing is not available
-  //     await Share.share({ message, title: `Share recipe: ${recipe.title}` });
-  //   } catch (err) {
-  //     console.log('[RecipeDetails:id] share error', err);
-  //   }
-  // };
   const handleShare = async () => {
     if (!recipe) return;
 
@@ -124,7 +101,6 @@ export default function RecipeDetailsId() {
 
       const fileUri = FileSystem.cacheDirectory + `recipe-${recipe.id}.txt`;
 
-      // legacy API is allowed here
       await FileSystem.writeAsStringAsync(fileUri, message);
 
       await Sharing.shareAsync(fileUri, {
@@ -133,7 +109,6 @@ export default function RecipeDetailsId() {
         UTI: 'public.text',
       });
 
-      // optional cleanup
       await FileSystem.deleteAsync(fileUri, { idempotent: true });
     } catch (err) {
       console.log('[RecipeDetails:id] share error', err);
@@ -153,17 +128,21 @@ export default function RecipeDetailsId() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* floating back button */}
+    <View style={{ flex: 1 }}>
+      {/* Fixed Back Button */}
       <Pressable
-        style={styles.backButton}
+        style={styles.backButtonFixed}
         onPress={() => {
           if (openedFrom === 'personal') {
             router.replace('/(tabs)/personalCollection');
             return;
           }
 
-          if (navigation && (navigation as any).canGoBack && (navigation as any).canGoBack()) {
+          if (
+            navigation &&
+            (navigation as any).canGoBack &&
+            (navigation as any).canGoBack()
+          ) {
             (navigation as any).goBack();
             return;
           }
@@ -174,92 +153,103 @@ export default function RecipeDetailsId() {
         <Ionicons name="arrow-back" size={22} color="#0f172a" />
       </Pressable>
 
-      {loading ? (
-        <View style={styles.loadingBox}>
-          <ActivityIndicator />
-        </View>
-      ) : error || !recipe ? (
-        <View style={styles.fallbackContainer}>
-          <Text style={styles.fallbackTitle}>
-            Oops, looks like this recipe is under investigation.
-          </Text>
-          <Text style={styles.fallbackSub}>Please check back later :)</Text>
-        </View>
-      ) : (
-        <View style={styles.card}>
-          {recipe.image ? (
-            <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="cover" />
-          ) : null}
-
-          <View style={styles.headerSection}>
-            <Text style={styles.title}>{recipe.title}</Text>
-
-            {(() => {
-              const parts: string[] = [];
-              if (recipe.author) parts.push(recipe.author);
-              if (recipe.duration) parts.push(recipe.duration);
-              if (typeof recipe.servings !== 'undefined' && recipe.servings !== null)
-                parts.push(`Serves ${recipe.servings}`);
-              if (parts.length > 0) return <Text style={styles.meta}>{parts.join(' • ')}</Text>;
-              return null;
-            })()}
-
-            {recipe.id ? <Text style={styles.small}>ID: {recipe.id}</Text> : null}
+      {/* Scrollable content */}
+      <ScrollView contentContainerStyle={styles.container}>
+        {loading ? (
+          <View style={styles.loadingBox}>
+            <ActivityIndicator />
           </View>
-
-          {recipe.description || recipe.instructions ? (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Description</Text>
-              <Text style={styles.paragraph}>{recipe.description ?? recipe.instructions}</Text>
-            </View>
-          ) : null}
-
-          {recipe.ingredients && (recipe.ingredients as any[]).length > 0 ? (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Ingredients</Text>
-              {(recipe.ingredients as string[]).map((ing: string, idx: number) => (
-                <Text key={idx} style={styles.listItem}>
-                  • {ing}
-                </Text>
-              ))}
-            </View>
-          ) : null}
-
-          {recipe.steps && (recipe.steps as any[]).length > 0 ? (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Steps</Text>
-              {((recipe.steps ?? []) as string[]).map((s: string, idx: number) => (
-                <Text key={idx} style={styles.listItem}>
-                  {idx + 1}. {s}
-                </Text>
-              ))}
-            </View>
-          ) : null}
-
-          <View style={styles.actionRow}>
-            <Pressable
-              onPress={handleToggleLike}
-              style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
-            >
-              <Ionicons
-                name={collected ? 'heart' : 'heart-outline'}
-                size={20}
-                color={collected ? '#e02424' : '#0f172a'}
-              />
-              <Text style={styles.iconButtonText}>{collected ? 'Unlike' : 'Like'}</Text>
-            </Pressable>
-
-            <Pressable
-              onPress={handleShare}
-              style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
-            >
-              <Ionicons name="share-outline" size={20} color="#0f172a" />
-              <Text style={styles.iconButtonText}>Share</Text>
-            </Pressable>
+        ) : error || !recipe ? (
+          <View style={styles.fallbackContainer}>
+            <Text style={styles.fallbackTitle}>
+              Oops, looks like this recipe is under investigation.
+            </Text>
+            <Text style={styles.fallbackSub}>Please check back later :)</Text>
           </View>
-        </View>
-      )}
-    </ScrollView>
+        ) : (
+          <View style={styles.card}>
+            {recipe.image ? (
+              <Image source={{ uri: recipe.image }} style={styles.image} resizeMode="cover" />
+            ) : null}
+
+            <View style={styles.headerSection}>
+              <Text style={styles.title}>{recipe.title}</Text>
+
+              {(() => {
+                const parts: string[] = [];
+                if (recipe.author) parts.push(recipe.author);
+                if (recipe.duration) parts.push(recipe.duration);
+                if (
+                  typeof recipe.servings !== 'undefined' &&
+                  recipe.servings !== null
+                )
+                  parts.push(`Serves ${recipe.servings}`);
+                if (parts.length > 0)
+                  return <Text style={styles.meta}>{parts.join(' • ')}</Text>;
+                return null;
+              })()}
+
+              {recipe.id ? <Text style={styles.small}>ID: {recipe.id}</Text> : null}
+            </View>
+
+            {recipe.description || recipe.instructions ? (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Description</Text>
+                <Text style={styles.paragraph}>
+                  {recipe.description ?? recipe.instructions}
+                </Text>
+              </View>
+            ) : null}
+
+            {recipe.ingredients && (recipe.ingredients as any[]).length > 0 ? (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Ingredients</Text>
+                {(recipe.ingredients as string[]).map((ing: string, idx: number) => (
+                  <Text key={idx} style={styles.listItem}>
+                    • {ing}
+                  </Text>
+                ))}
+              </View>
+            ) : null}
+
+            {recipe.steps && (recipe.steps as any[]).length > 0 ? (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Steps</Text>
+                {((recipe.steps ?? []) as string[]).map((s: string, idx: number) => (
+                  <Text key={idx} style={styles.listItem}>
+                    {idx + 1}. {s}
+                  </Text>
+                ))}
+              </View>
+            ) : null}
+
+            <View style={styles.actionRow}>
+              <Pressable
+                onPress={handleToggleLike}
+                style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
+              >
+                <Ionicons
+                  name={collected ? 'heart' : 'heart-outline'}
+                  size={20}
+                  color={collected ? '#e02424' : '#0f172a'}
+                />
+                <Text style={styles.iconButtonText}>
+                  {collected ? 'Unlike' : 'Like'}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleShare}
+                style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
+              >
+                <Ionicons name="share-outline" size={20} color="#0f172a" />
+                <Text style={styles.iconButtonText}>Share</Text>
+              </Pressable>
+            </View>
+          </View>
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
@@ -345,22 +335,24 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#0f172a',
   },
-  backButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+
+  backButtonFixed: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.95)',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 18,
-    left: 18,
-    zIndex: 10,
+    top: 40,
+    left: 40,
+    zIndex: 999,
     shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
   },
+
   loadingBox: {
     backgroundColor: '#fff',
     borderRadius: 16,
