@@ -319,7 +319,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   // Add filter (single)
   // ----------------------------------------------------
   const addFilter = async () => {
-    const trimmed = filterValue.trim();
+    const trimmed = filterValue ? filterValue.trim() : categoryOptions[0] ?? '';
     if (!trimmed) return;
     if (filters.length >= 1) return;
 
@@ -353,7 +353,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
     setFilters([]);
     setShowBuilder(false);
     setSelectedField('category');
-    setFilterValue('');
+    setFilterValue(currentOptions[0] ?? '');
     setRemoteRecipes(null);
     setRemoteError(null);
     setFilterRecipes(null);
@@ -516,7 +516,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
                 selectedValue={selectedField}
                 onValueChange={(v) => {
                   setSelectedField(v as FilterField);
-                  setFilterValue('');
+                  setFilterValue(currentOptions[0] ?? '');
                 }}
                 style={styles.pickerSmall}
                 itemStyle={{ fontSize: 12 }}
@@ -550,7 +550,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
             <Pressable
               onPress={() => {
                 setShowBuilder(false);
-                setFilterValue('');
+                setFilterValue(currentOptions[0] ?? '');
               }}
               style={styles.cancelBtn}
             >
