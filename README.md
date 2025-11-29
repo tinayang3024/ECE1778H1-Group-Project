@@ -129,12 +129,23 @@ The app will implement OAuth-based social logins (e.g., Google, Facebook, GitHub
 The Recipe Mobile App will also enable recipe sharing through Expo’s `Sharing` API, letting users send recipe details (title, instructions, and links) directly to social media or messaging apps. With one tap, users can share a favorite dish with friends or family, making cooking a social and collaborative activity. This feature not only improves user engagement but also helps promote the app organically as recipes are shared across different platforms.
 
 
-#### Timeline Discussion
-The above listed features — including the recipe browsing and creation, detailed recipe views, user collection management, local persistence with Async Storage, daily notifications, Expo Router-based navigation, and the two advanced features of OAuth-based login and social sharing — collectively satisfy the course project requirements by demonstrating core mobile app front end development skills, state management, and user interaction design. The project scope is well-defined and moderate, focusing on five primary screens and key functionalities that are achievable within the 8-week timeframe, allowing sufficient time for design, implementation, testing, and iteration. By leveraging Expo Router for file-based navigation, React Context and Async Storage for state and persistence, and Expo Notifications for user engagement, the project balances feature richness with development feasibility, ensuring a polished and functional app by the course deadline.
+## Technical Stack
+TBD
 
-## Tentative Plan
+## User Guide
+TBD
 
-The following table presents a tentative plan for the development of the Recipe Mobile App, assuming a total project timeline of approximately 2 months (8 weeks). The schedule outlines key phases, tasks, estimated effort, and assigned owners for each component of the project. 
+## Video Demo
+https://www.youtube.com/watch?v=6QOHw9LwyNU
+
+## Development Guide
+TBD
+
+## Deployment Information
+
+
+
+##  Individual Contributions
 
 <table class="tg">
   <thead>
@@ -142,58 +153,80 @@ The following table presents a tentative plan for the development of the Recipe 
       <th>Project Phase</th>
       <th>Tasks</th>
       <th>Owner</th>
-      <th>Estimated Effort</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td rowspan="1">General framework & navigation & basic layout</td>
-      <td>Page layout, navigation, states with hardcoded data</td>
+      <td rowspan="6">General Screen Layout, Navigation, States with hardcoded data</td>
+      <td>Login Screen</td>
+      <td>Dingyu</td>
+    </tr>
+   <tr>
+      <td>Dashboard Screen</td>
+      <td>Dingyu</td>
+    </tr>
+   <tr>
+      <td>Recipe Details Screen</td>
+      <td>Renli</td>
+    </tr>
+   <tr>
+      <td>New Recipe Screen</td>
+      <td>Renli</td>
+    </tr>
+   <tr>
+      <td>Profile Screen</td>
       <td>Team</td>
-      <td>2 weeks</td>
+    </tr>
+   <tr>
+      <td>Personal Collection</td>
+      <td>Team</td>
     </tr>
     <tr>
       <td rowspan="1">Notification</td>
       <td>Implement cooking reminders</td>
       <td>Renli</td>
-      <td>0.5 week</td>
     </tr>
     <tr>
       <td rowspan="1">Backend integration</td>
       <td>Connect to external recipe API (TheMealDB)</td>
-      <td>Renli</td>
-      <td>1 week</td>
+      <td>Team</td>
     </tr>
     <tr>
       <td rowspan="2">Advanced features</td>
       <td>OAuth implementation</td>
-      <td>Tina</td>
-      <td>1 week</td>
+      <td>Dingyu</td>
     </tr>
     <tr>
       <td>Social sharing functionality</td>
-      <td>Tina</td>
-      <td>0.5 week</td>
+      <td>Dingyu</td>
     </tr>
     <tr>
       <td rowspan="1">Testing & deployment</td>
       <td>Final end-to-end testing & bug fixing</td>
       <td>Team</td>
-      <td>1 week</td>
     </tr>
     <tr>
       <td rowspan="1">Deployment</td>
       <td>Final app deployment (Expo EAS build)</td>
-      <td>Tina</td>
-      <td>0.5 week</td>
+      <td>Dingyu</td>
+    </tr>
+     <tr>
+      <td rowspan="3">Presentation and Cleanup</td>
+      <td>Presentation Slides</td>
+      <td>Team</td>
     </tr>
     <tr>
-      <td colspan="3"><strong>Total</strong></td>
-      <td><strong>6.5 weeks</strong></td>
+      <td>Demo Recording</td>
+      <td>Dingyu</td>
+    </tr>
+    <tr>
+      <td>README Updates</td>
+      <td>Renli</td>
     </tr>
   </tbody>
 </table>
 
-While the total planned effort sums to 6.5 weeks, additional buffer time has been intentionally left to accommodate unexpected challenges, debugging, and preparation for the final presentation, ensuring the project can be completed smoothly within the overall timeframe.
+## Lessons Learned and Concluding Remarks
+TBD
 
 
