@@ -128,22 +128,20 @@ The app will implement OAuth-based social logins (e.g., Google, Facebook, GitHub
 
 The Recipe Mobile App will also enable recipe sharing through Expo’s `Sharing` API, letting users send recipe details (title, instructions, and links) directly to social media or messaging apps. With one tap, users can share a favorite dish with friends or family, making cooking a social and collaborative activity. This feature not only improves user engagement but also helps promote the app organically as recipes are shared across different platforms.
 
-
-## Technical Stack
-TBD
-
 ## User Guide
 TBD
 
 ## Video Demo
 https://www.youtube.com/watch?v=6QOHw9LwyNU
 
+## Technical Stack
+TBD
+
 ## Development Guide
 TBD
 
 ## Deployment Information
-
-
+https://expo.dev/artifacts/eas/hY8FY9dpPAB9yLvPuJsAJg.apk
 
 ##  Individual Contributions
 
