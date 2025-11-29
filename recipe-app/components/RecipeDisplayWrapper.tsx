@@ -1,4 +1,3 @@
-// components/RecipeDisplayWrapper.tsx
 import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,

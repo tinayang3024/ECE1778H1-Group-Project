@@ -1,4 +1,3 @@
-// components/RecipeDisplayList.tsx
 import React from 'react';
 import { FlatList, View, Text, StyleSheet, ViewStyle } from 'react-native';
 import RecipeDisplayItem from './RecipeDisplayItem';

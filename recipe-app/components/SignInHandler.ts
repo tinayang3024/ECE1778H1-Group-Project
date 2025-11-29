@@ -27,14 +27,11 @@ export const GoogleSignInHandler = async (
         picture: gUser?.photo ?? undefined,
       };
 
-      // ✅ call the AuthContext login passed in
       onSuccess({
         user: authUser,
-        // prefer idToken → fall back to serverAuthCode → final string
         accessToken: idToken || serverAuthCode || 'google-session',
       });
     } else {
-      // user cancelled
       console.log('Google sign-in cancelled');
     }
   } catch (error) {

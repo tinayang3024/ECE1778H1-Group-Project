@@ -1,4 +1,3 @@
-// app/(tabs)/personal.tsx
 import { Text, View } from '@/components/Themed';
 import { StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -100,7 +99,7 @@ export default function TabPersonalScreen() {
           >
             <Ionicons name="send" size={20} color="#111" />
             <Text style={{ marginLeft: 8 }}>Test notification</Text>
-          </Pressable> */}
+          </Pressable> */}ß
           <Text style={{ marginLeft: 8, color: '#666' }}>
             {/* Permission: {permissionStatus ?? 'unknown'} */}
           </Text>

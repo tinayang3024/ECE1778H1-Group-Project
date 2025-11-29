@@ -1,4 +1,3 @@
-// components/RecipeDisplayItem.tsx
 import React from 'react';
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
@@ -8,15 +7,11 @@ type Props = {
   recipe: RecipeData;
 };
 
-// const FALLBACK_IMG =
-//   "https://via.placeholder.com/80x80.png?text=Recipe"; // optional placeholder
-
 export default function RecipeDisplayItem({ recipe }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
   const onPress = () => {
-    // push to the path if coming from the personal collection page
     const fromParam = pathname?.includes('personalCollection') ? 'personal' : '';
     router.push({
       pathname: '/(tabs)/recipeDetails/[id]',

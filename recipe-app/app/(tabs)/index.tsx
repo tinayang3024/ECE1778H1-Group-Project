@@ -1,7 +1,6 @@
-import { StyleSheet, Pressable } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet } from 'react-native';
+import { View } from '@/components/Themed';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import RecipeDisplayWrapper from '@/components/RecipeDisplayWrapper';
 
 export default function TabDashboardScreen() {

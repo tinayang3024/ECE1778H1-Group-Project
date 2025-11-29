@@ -9,7 +9,6 @@ import {
   Image as RNImage,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { MOCK_RECIPES, addMockRecipe, type Recipe } from './_mockRecipes';
 import { useCollected } from '@/context/CollectedContext';
 

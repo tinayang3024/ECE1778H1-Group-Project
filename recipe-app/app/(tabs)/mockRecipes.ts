@@ -1,6 +1,3 @@
-// Local mock data for recipes used by the example pages under (tabs)
-// Purpose: provide in-memory sample recipes so pages render meaningful content
-// TODO: replace with API calls / persistent storage when backend is ready
 export type Recipe = {
   id: string;
   title: string;
