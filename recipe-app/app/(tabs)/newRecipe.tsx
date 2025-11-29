@@ -9,10 +9,10 @@ import {
   Image as RNImage,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { MOCK_RECIPES, addMockRecipe, type Recipe } from './_mockRecipes';
+import { MOCK_RECIPES, addMockRecipe, type Recipe } from '../../utils/recipes';
 import { useCollected } from '@/context/CollectedContext';
 
-const DEFAULT_IMAGE_ASSET = require('../../assets/images/kitchen.jpg');
+const DEFAULT_IMAGE_ASSET = require('../../assets/images/recipe_placeholder_image.jpg');
 const DEFAULT_IMAGE_URL = RNImage.resolveAssetSource(DEFAULT_IMAGE_ASSET).uri;
 
 export default function NewRecipe() {

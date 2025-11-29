@@ -30,9 +30,10 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   useEffect(() => {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
+        shouldShowBanner: true,      // replaces shouldShowAlert
+        shouldShowList: true,        // recommended to also show in notification center
+        shouldPlaySound: true,
+        shouldSetBadge: true,
       }),
     });
   }, []);
@@ -157,8 +158,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     // send a quick immediate notification (local)
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: 'Test: Dinner ideas',
-        body: 'This is a test notification.',
+        title: 'Dinner ideas 🍽️',
+        body: 'Check the app for dinner recipe inspirations — tap to explore!',
+        data: { screen: '/(tabs)/' },
       },
       trigger: null,
     });

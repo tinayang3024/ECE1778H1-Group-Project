@@ -54,12 +54,15 @@
           "iosUrlScheme": "com.googleusercontent.apps.590532636165-2cu1n0n22kg3i34gc6aqfgbm3kuj1gtj",
           "androidClientId": "590532636165-3aqogltatr3nuf4hlkgt282p743gvveg.apps.googleusercontent.com"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
     },
-    "deepLinks": ["recipe/*"],
+    "deepLinks": [
+      "recipe/*"
+    ],
     "extra": {
       "router": {},
       "eas": {

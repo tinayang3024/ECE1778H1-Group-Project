@@ -93,14 +93,16 @@ export default function TabPersonalScreen() {
           />
         </View>
         <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+          {/* uncomment for notification demo */}
           {/* <Pressable
             onPress={() => sendTestNotification()}
             style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1, padding: 8, flexDirection: 'row', alignItems: 'center' }]}
           >
             <Ionicons name="send" size={20} color="#111" />
-            <Text style={{ marginLeft: 8 }}>Test notification</Text>
-          </Pressable> */}ß
+            <Text style={{ marginLeft: 8 }}>Test Notification (Demo Only)</Text>
+          </Pressable> */}
           <Text style={{ marginLeft: 8, color: '#666' }}>
+            {/* uncomment for notification permission */}
             {/* Permission: {permissionStatus ?? 'unknown'} */}
           </Text>
         </View>
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   logoutBtn: {
-    backgroundColor: '#ef4444', // red for sign out
+    backgroundColor: '#ef4444',
   },
   logoutBtnText: {
     color: '#fff',

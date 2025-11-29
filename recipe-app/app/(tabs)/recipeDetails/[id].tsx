@@ -12,7 +12,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import { useCollected } from '@/context/CollectedContext';
 import { Ionicons } from '@expo/vector-icons';
-import { MOCK_RECIPES } from '../_mockRecipes';
+import { MOCK_RECIPES } from '../../../utils/recipes';
 import { mapMealToDetail } from '../../../utils/mealMapper';
 import * as Linking from 'expo-linking';
 import * as Sharing from 'expo-sharing';

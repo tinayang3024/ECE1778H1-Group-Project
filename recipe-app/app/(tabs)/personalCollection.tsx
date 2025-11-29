@@ -2,7 +2,7 @@ import { StyleSheet, ScrollView, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useRouter } from 'expo-router';
 import { useCollected } from '@/context/CollectedContext';
-import { MOCK_RECIPES } from './_mockRecipes';
+import { MOCK_RECIPES } from '../../utils/recipes';
 import RecipeDisplayWrapper from '@/components/RecipeDisplayWrapper';
 import { Ionicons } from '@expo/vector-icons';
 

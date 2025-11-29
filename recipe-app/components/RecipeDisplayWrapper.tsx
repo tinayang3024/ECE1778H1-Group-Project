@@ -740,8 +740,8 @@ const styles = StyleSheet.create({
   },
   addBtnText: { color: '#fff', fontWeight: '700' },
   inputDisabled: {
-    backgroundColor: '#f1f1f1', // light gray background
-    color: '#999', // dim text color
-    opacity: 0.7, // slightly faded look
+    backgroundColor: '#f1f1f1', 
+    color: '#999',
+    opacity: 0.7, 
   },
 });
