@@ -22,7 +22,6 @@ export default function NewRecipe() {
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [author, setAuthor] = useState('');
   const [duration, setDuration] = useState('');
   const [servings, setServings] = useState('');
   const [ingredients, setIngredients] = useState('');
@@ -39,7 +38,6 @@ export default function NewRecipe() {
   function validateAll() {
     const next: any = {};
     if (!title.trim()) next.title = 'Title is required';
-    if (!author.trim()) next.author = 'Author is required';
     if (!duration.trim()) next.duration = 'Duration is required';
     const srvErr = validateServingsValue(servings);
     if (srvErr) next.servings = srvErr;
@@ -63,7 +61,6 @@ export default function NewRecipe() {
   function resetFormAndExit() {
     setTitle('');
     setDescription('');
-    setAuthor('');
     setDuration('');
     setServings('');
     setIngredients('');
@@ -80,7 +77,6 @@ export default function NewRecipe() {
     const newRecipe: Recipe = {
       id: newId,
       title: title.trim(),
-      author: author.trim(),
       image: DEFAULT_IMAGE_URL,
       duration: duration.trim(),
       servings: servings ? parseInt(servings, 10) : undefined,
@@ -117,7 +113,6 @@ export default function NewRecipe() {
 
   const isFormValid = () => {
     if (!title.trim()) return false;
-    if (!author.trim()) return false;
     if (!duration.trim()) return false;
     if (!servings.trim() || validateServingsValue(servings)) return false;
     if (!ingredients.split('\n').map((s) => s.trim()).filter(Boolean).length) return false;
@@ -146,14 +141,6 @@ export default function NewRecipe() {
           multiline
           onChangeText={setDescription}
         />
-
-        <TextInput
-          placeholder="Author"
-          style={styles.input}
-          value={author}
-          onChangeText={setAuthor}
-        />
-        {errors.author && <Text style={styles.errText}>{errors.author}</Text>}
 
         <TextInput
           placeholder="Duration (e.g. 20 mins)"
