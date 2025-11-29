@@ -9,7 +9,7 @@ export default function TabDashboardScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> 
+      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <View style={{ flex: 1 }}>
         <RecipeDisplayWrapper data={undefined} />
       </View>

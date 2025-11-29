@@ -45,7 +45,7 @@ export default function RecipeDetailsId() {
       setError(null);
       try {
         const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${encodeURIComponent(
-          mealId
+          mealId,
         )}`;
         const res = await fetch(url);
         const json = await res.json();
@@ -138,11 +138,7 @@ export default function RecipeDetailsId() {
             return;
           }
 
-          if (
-            navigation &&
-            (navigation as any).canGoBack &&
-            (navigation as any).canGoBack()
-          ) {
+          if (navigation && (navigation as any).canGoBack && (navigation as any).canGoBack()) {
             (navigation as any).goBack();
             return;
           }
@@ -179,13 +175,9 @@ export default function RecipeDetailsId() {
                 const parts: string[] = [];
                 if (recipe.author) parts.push(recipe.author);
                 if (recipe.duration) parts.push(recipe.duration);
-                if (
-                  typeof recipe.servings !== 'undefined' &&
-                  recipe.servings !== null
-                )
+                if (typeof recipe.servings !== 'undefined' && recipe.servings !== null)
                   parts.push(`Serves ${recipe.servings}`);
-                if (parts.length > 0)
-                  return <Text style={styles.meta}>{parts.join(' • ')}</Text>;
+                if (parts.length > 0) return <Text style={styles.meta}>{parts.join(' • ')}</Text>;
                 return null;
               })()}
 
@@ -195,9 +187,7 @@ export default function RecipeDetailsId() {
             {recipe.description || recipe.instructions ? (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Description</Text>
-                <Text style={styles.paragraph}>
-                  {recipe.description ?? recipe.instructions}
-                </Text>
+                <Text style={styles.paragraph}>{recipe.description ?? recipe.instructions}</Text>
               </View>
             ) : null}
 
@@ -233,9 +223,7 @@ export default function RecipeDetailsId() {
                   size={20}
                   color={collected ? '#e02424' : '#0f172a'}
                 />
-                <Text style={styles.iconButtonText}>
-                  {collected ? 'Unlike' : 'Like'}
-                </Text>
+                <Text style={styles.iconButtonText}>{collected ? 'Unlike' : 'Like'}</Text>
               </Pressable>
 
               <Pressable

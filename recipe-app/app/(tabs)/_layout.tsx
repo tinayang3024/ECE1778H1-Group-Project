@@ -45,14 +45,11 @@ export default function TabLayout() {
         options={{
           title: '',
           tabBarLabel: '',
-          tabBarIcon: () => null, 
+          tabBarIcon: () => null,
           tabBarButton: () => (
             <Pressable
               onPress={() => router.push('/newRecipe')}
-              style={({ pressed }) => [
-                styles.plusButtonContainer,
-                pressed && { opacity: 0.85 },
-              ]}
+              style={({ pressed }) => [styles.plusButtonContainer, pressed && { opacity: 0.85 }]}
             >
               <View style={styles.plusButton}>
                 <FontAwesome6 name="add" size={28} color="#fff" />

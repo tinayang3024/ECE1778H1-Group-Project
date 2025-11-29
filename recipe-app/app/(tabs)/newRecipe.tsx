@@ -115,8 +115,20 @@ export default function NewRecipe() {
     if (!title.trim()) return false;
     if (!duration.trim()) return false;
     if (!servings.trim() || validateServingsValue(servings)) return false;
-    if (!ingredients.split('\n').map((s) => s.trim()).filter(Boolean).length) return false;
-    if (!steps.split('\n').map((s) => s.trim()).filter(Boolean).length) return false;
+    if (
+      !ingredients
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean).length
+    )
+      return false;
+    if (
+      !steps
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean).length
+    )
+      return false;
     return true;
   };
 
@@ -196,10 +208,7 @@ export default function NewRecipe() {
       {/* CANCEL BUTTON */}
       <Pressable
         onPress={resetFormAndExit}
-        style={({ pressed }) => [
-          styles.cancelButton,
-          pressed && { opacity: 0.8 },
-        ]}
+        style={({ pressed }) => [styles.cancelButton, pressed && { opacity: 0.8 }]}
       >
         <Text style={styles.cancelButtonText}>Cancel</Text>
       </Pressable>

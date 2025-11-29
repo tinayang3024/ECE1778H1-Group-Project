@@ -57,33 +57,30 @@ export default function TabPersonalCollectionScreen() {
   return (
     <View style={{ flex: 1 }}>
       {/* Fixed Back Button */}
-      <Pressable
-        style={styles.backButtonFixed}
-        onPress={() => router.replace('/(tabs)/personal')}
-      >
+      <Pressable style={styles.backButtonFixed} onPress={() => router.replace('/(tabs)/personal')}>
         <Ionicons name="arrow-back" size={22} color="#0f172a" />
       </Pressable>
 
-        {data.length === 0 ? (
-          <View style={styles.emptyCard}>
-            <Text style={styles.emptyEmoji}>🍽️</Text>
-            <Text style={styles.emptyTitle}>No liked recipes yet</Text>
-            <Text style={styles.emptySubtitle}>
-              Start exploring and tap ❤️ on your favorite dishes!
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.listWrapper}>
-            <RecipeDisplayWrapper data={data} />
-          </View>
-        )}
+      {data.length === 0 ? (
+        <View style={styles.emptyCard}>
+          <Text style={styles.emptyEmoji}>🍽️</Text>
+          <Text style={styles.emptyTitle}>No liked recipes yet</Text>
+          <Text style={styles.emptySubtitle}>
+            Start exploring and tap ❤️ on your favorite dishes!
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.listWrapper}>
+          <RecipeDisplayWrapper data={data} />
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 80,     // leave space for the fixed button
+    paddingTop: 80, // leave space for the fixed button
     paddingHorizontal: 16,
     paddingBottom: 32,
     backgroundColor: '#fff',

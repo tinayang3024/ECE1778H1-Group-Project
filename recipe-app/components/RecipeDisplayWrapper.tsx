@@ -319,7 +319,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   // Add filter (single)
   // ----------------------------------------------------
   const addFilter = async () => {
-    const trimmed = filterValue ? filterValue.trim() : categoryOptions[0] ?? '';
+    const trimmed = filterValue ? filterValue.trim() : (categoryOptions[0] ?? '');
     if (!trimmed) return;
     if (filters.length >= 1) return;
 
