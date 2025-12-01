@@ -466,3 +466,17 @@ Builds are managed via Expo Application Services (EAS). Ensure you have:
 - An Expo account (sign up at [expo.dev](https://expo.dev))
 - EAS CLI installed: `npm install -g eas-cli`
 - Configured `eas.json` (already included in the repository)
+
+## Lessons Learned and Concluding Remarks
+
+### Insights and Reflections
+
+Throughout development, we learned valuable lessons about mobile app architecture and best practices. The project reinforced the importance of iterative development and cross-platform testing, allowing us to identify issues early by building features incrementally. 
+
+Our most significant insight was the adoption of Expo Router. Initially, we considered using traditional React Navigation but during actual development, we decided to switch to Expo Router, which proved to be an excellent decision. The file-based routing paradigm reduced boilerplate code dramatically and made the navigation structure immediately apparent from our project directory layout. Type-safe route parameters and seamless TypeScript integration prevented many potential runtime errors and improved our development velocity. Expo Router's query parameter system enabled us to implement a smart back button feature: since the recipe detail page can be navigated to from dashboard or personal collection, the back button will return the user to the previous page they were on rather than defaulting to a specific one. This context-aware navigation was achieved by passing query parameters (e.g., `?from=personal`) through Expo Router's navigation system, allowing us to maintain navigation context without complex state management.
+
+Another of our insight was recognizing the importance of separating state management concerns. Rather than consolidating all app state within `AuthContext`, we created separate contexts (`CollectedContext` and `NotificationContext`) for feature-specific state like liked recipes and notifications. This modular architecture, where each context has a single, well-defined responsibility, significantly simplified debugging and made extending features more straightforward. Additionally, we learned that persisting complete data objects rather than just identifiers in AsyncStorage eliminated unnecessary API calls and simplified our code, trading minimal storage space for significant performance gains—a worthwhile tradeoff for a local-first mobile application.
+
+### Concluding Thoughts
+
+The Recipe Mobile App project provided a comprehensive learning experience in mobile application development. We successfully delivered a functional app that demonstrates core mobile development skills including state management, data persistence, external API integration, notifications, and cross-platform compatibility. Working with Expo and React Native proved excellent for rapid development, while TypeScript's type safety caught numerous potential bugs during development. Beyond technical achievements, this project reinforced important software engineering principles: modular architecture, user-centered design, comprehensive testing, and clear documentation. The collaborative nature of the project also provided valuable experience in teamwork and iterative development practices. Overall, we think it was a great learning experience and had taught us a lot about modern mobile app development practices.
