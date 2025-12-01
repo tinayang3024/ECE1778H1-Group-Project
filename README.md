@@ -353,26 +353,19 @@ The project uses the following major dependencies (automatically installed via `
 
 ### Run the Development Server
 
-Start the Expo development server:
+Run the app directly on emulators/simulators. This compiles the native code and launches the app:
 
 ```bash
-npx expo start
+# Run on iOS simulator (macOS only)
+npx expo run:ios
+
+# Run on Android emulator
+npx expo run:android
 ```
 
-Or with cache cleared (recommended for first run or after dependency changes):
-
-```bash
-npx expo start -c
-```
-
-### Test on Different Platforms
-
-After starting the dev server, you'll see a QR code and options in your terminal.
-
-**Test your app using Emulator**
-
-- Press `i` to launch the iOS simulator (macOS only)
-- Press `a` to launch the Android emulator (ensure an AVD is already created and Android Studio is configured)
+**Note**: These commands compile native code and may take a few minutes on first run. Ensure you have:
+- iOS Simulator installed (via Xcode on macOS) for iOS
+- Android emulator running (via Android Studio) for Android
 
 ### Project Structure
 
