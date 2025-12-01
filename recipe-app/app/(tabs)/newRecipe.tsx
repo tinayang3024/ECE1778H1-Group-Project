@@ -30,7 +30,7 @@ export default function NewRecipe() {
 
   function validateServingsValue(value: string) {
     if (!value) return 'Servings is required';
-    if (!/^\d+$/.test(value.trim())) return 'Servings must be a whole number';
+    if (parseInt(value, 10) <= 0 || !/^\d+$/.test(value.trim())) return 'Servings must be a whole positive number';
     return null;
   }
 

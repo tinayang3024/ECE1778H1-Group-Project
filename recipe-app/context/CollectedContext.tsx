@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 export type CollectedItem = {
   id: string;
@@ -41,8 +42,10 @@ export const CollectedProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     (async () => {
       try {
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(collected));
-      } catch {
-        // ignore
+      } catch (error) {
+        console.error('Failed to save collected recipes:', error);
+        // Consider showing a toast notification to user
+        Alert.alert('Storage Error', 'Failed to save your recipes. Please try again.');
       }
     })();
   }, [collected]);

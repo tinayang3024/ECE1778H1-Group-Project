@@ -76,6 +76,7 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
   const [areaOptions, setAreaOptions] = useState<string[]>([]);
   const [ingredientOptions, setIngredientOptions] = useState<string[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   // sync external data later
   useEffect(() => {
@@ -105,11 +106,9 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
               });
             }
           } catch (err) {
-            console.log('random meal fetch failed', err);
-          } finally {
-            if (!(cancelledRef?.current ?? false)) {
-              setLoadingRandom(false);
-            }
+            console.error('Failed to fetch random meals:', err);
+            setApiError('Failed to load recipes. Please check your connection.');
+            setLoadingRandom(false);
           }
         })();
       }
@@ -600,6 +599,16 @@ export default function RecipeDisplayWrapper({ data, style, initialQuery = '' }:
         </View>
       )}
 
+      {/* Error state */}
+      {apiError && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{apiError}</Text>
+          <Pressable onPress={refreshRandom}>
+            <Text style={styles.retryText}>Retry</Text>
+          </Pressable>
+        </View>
+      )}
+
       {/* Final list */}
       <RecipeDisplayList data={listData} loadingState={showInitialLoading} />
     </View>
@@ -743,5 +752,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f1f1', 
     color: '#999',
     opacity: 0.7, 
+  },
+  errorContainer: {
+    padding: 12,
+    borderRadius: 8,
+    backgroundColor: '#fff3f3',
+    borderWidth: 1,
+    borderColor: '#ffcccc',
+    marginBottom: 12,
+  },
+  errorText: {
+    color: '#d8000c',
+    marginBottom: 8,
+  },
+  retryText: {
+    color: '#1e90ff',
+    fontWeight: '700',
   },
 });
