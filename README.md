@@ -357,7 +357,7 @@ Builds are managed via Expo Application Services (EAS). Ensure you have:
 ## Deployment Information
 https://expo.dev/artifacts/eas/hY8FY9dpPAB9yLvPuJsAJg.apk
 
-##  Individual Contributions
+## Individual Contributions
 
 <table class="tg">
   <thead>
@@ -390,39 +390,10 @@ https://expo.dev/artifacts/eas/hY8FY9dpPAB9yLvPuJsAJg.apk
       <td>Team</td>
     </tr>
    <tr>
-   <td>Personal Collection</td>
+      <td>Personal Collection</td>
       <td>Team</td>
     </tr>
     <tr>
-      <td rowspan="1">Notification</td>
-      <td>Implement cooking reminders</td>
-      <td>Renli</td>
-    </tr>
-    <tr>
-      <td rowspan="1">Backend integration</td>
-      <td>Connect to external recipe API (TheMealDB)</td>
-      <td>Team</td>
-    </tr>
-    <tr>
-      <td rowspan="2">Advanced features</td>
-      <td>OAuth implementation</td>
-      <td>Dingyu</td>
-    </tr>
-    <tr>
-      <td>Social sharing functionality</td>
-      <td>Dingyu</td>
-    </tr>
-    <tr>
-      <td rowspan="1">Testing & deployment</td>
-      <td>Final end-to-end testing & bug fixing</td>
-      <td>Team</td>
-    </tr>
-    <tr>
-      <td rowspan="1">Deployment</td>
-      <td>Final app deployment (Expo EAS build)</td>
-      <td>Dingyu</td>
-    </tr>
-    
 
 ## Lessons Learned and Concluding Remarks
 
