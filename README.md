@@ -23,12 +23,12 @@ Some of the key features provided by the app include:
 
 * Integration with external recipe backend APIs (TheMealDB) to deliver a wide variety of worldwide recipes directly to users within the app.
 * User-defined custom recipe creation with full validation, including title, duration, servings, ingredients, and cooking steps. New recipes are stored locally via AsyncStorage and automatically added to the user's personal collection.
-* Complete recipe information displayed on the Recipe Detail Screen, including ingredients, instructions (split by step), servings, duration, and a large recipe image with a local fallback (kitchen.jpg) when no image is available.
+* Complete recipe information displayed on the Recipe Detail Screen, including ingredients, instructions (split by step), servings, duration, and a large recipe image with a local fallback (recipe_placeholder_image.jpg) for personal recipes and online recipes with no image avaliable.
 * Like/unlike functionality that stores full recipe data (title, image, ingredients, instructions) to the user's personal collection using AsyncStorage for persistent storage across app restarts.
 * Personal Collection Screen displays all liked recipes with image previews; recipes can be removed by unliking them from the detail page.
 * Integration with Expo Notifications to provide an opt-in daily reminder at 6:00 PM for users to explore dinner recipe ideas, with test notification support.
 * Smart navigation: clicking back from recipe details returns to the origin screen (Dashboard or Personal Collection) based on where the recipe was opened.
-* Deployment using Expo EAS Build to enable testing the app for both iOS and Android without requiring local setups.
+* Deployment using Expo EAS Build to enable testing the app for Android without requiring local setups (IOS version was tested locally but not deployed due to the additional fees required)
 
 #### Navigation Structure
 Expo Router is chosen over React Navigation for this project because its file-based routing significantly reduces boilerplate, simplifies dynamic route handling, and integrates seamlessly with Expo and TypeScript. This ensures type-safe route parameters, predictable screen transitions, and a clean, scalable architecture that improves both developer experience and code readability.
@@ -54,15 +54,15 @@ app/
 The app UI is organized into six main screens, each with distinct features:
 
 * **Login Screen**
-  * OAuth-based login through supported third-party providers (e.g., Google)
+  * OAuth-based login through supported Google Authentication
   * Redirects to Dashboard after successful login
 
 * **Dashboard Screen**
   * Displays a featured recipe list fetched from TheMealDB public API
   * Each recipe card shows image preview, title, and brief description
   * Each recipe card is clickable to view the full recipe details
-  * Filter options and search bar to search for recipes 
-  * Bottom tab navigation to New Recipe and Personal Profile
+  * Sort, filter, and search recipes (Note: TheMealDB’s free API does not support combining sort, filter, and search in a single request, so user can only do it one time at a time)
+  * Bottom tab navigation to **New Recipe** and **Personal Profile**
 
 * **New Recipe Screen**
   * Input fields for entering recipe details with validation:
@@ -72,10 +72,9 @@ The app UI is organized into six main screens, each with distinct features:
     * Servings (required, positive integer)
     * Ingredients (required, one per line)
     * Steps (required, one per line)
-  * Real-time validation with error messages for invalid inputs
+  * Input validation with error messages for invalid inputs
   * Save button (disabled until all required fields are valid)
   * On save: recipe is stored locally (AsyncStorage), auto-liked, and added to personal collection
-  * Success screen with large checkmark icon and back button to create another recipe
 
 * **Recipe Details Screen**
   * Displays all information for a selected recipe, including:
@@ -86,24 +85,25 @@ The app UI is organized into six main screens, each with distinct features:
     * Ingredient list (e.g., butter, flour, sugar)
     * Measurement list (e.g., 175g/6oz)
   * A button to `like recipe`, saving it to the user’s collection or `unlike recipe`, removing it from the user's collection
-  * A button to return to Home Screen
+  * A button to share to external app
+  * A button to return to **Dashboard Screen**
   * Fallback UI with friendly message if recipe fails to load
 
 * **Personal Collection Screen**
 
   * Displays a grid of all liked recipes with image previews and titles
   * Shows a message "You haven't liked any recipes yet" if collection is empty
-  * Each recipe card is clickable to open the Recipe Details Screen
+  * Each recipe card is clickable to open the **Recipe Details Screen**
   * Recipes disappear from the list immediately when unliked
 
 * **Personal Profile Screen**
 
-  * Displays the user's personal information after login (name, email, profile picture)
+  * Displays the user's personal information after login (google username, gmail, google profile photo)
   * Shows the total number of collected recipes (synced with CollectedContext)
   * "View My Collection" button routes to the **Personal Collection Screen**
   * Daily notification toggle: user can enable/disable 6:00 PM recipe reminder
-  * Displays current notification permission status
-  * Logout button for users to sign out
+  * Displays current notification permission status (visible in demo version only, invisible in the deployed version)
+  * Logout button to end the session and redirect to **Login Screen**
 
 #### State Management and Persistence
 The app manages its state using a combination of the React Context API and the useReducer hook, providing a structured yet lightweight solution for handling module-level or medium-complexity state such as user authentication, preferences, theme settings, and recipe collections. Context serves primarily as a dependency injection mechanism, enabling shared data and functions to be accessed across multiple screens without the need for excessive prop drilling. The main context logic is implemented in `context/AuthContext.tsx`, which centralizes user authentication state and provides context values and methods (e.g., login status, user info, and sign-in/sign-out handlers) to components throughout the app. This setup ensures that authentication and user-related data remain consistent across navigations, even when switching between tabs or screens.
@@ -111,15 +111,15 @@ The app manages its state using a combination of the React Context API and the u
 Data persistence is achieved through React Native Async Storage, ensuring that important user data—such as saved recipes, liked items, and user preferences—remains available across app restarts. This enhances user experience by maintaining continuity even when the app is closed or restarted, without the need for a backend database.
 
 #### Notification
-The app integrates Expo Notifications to provide a daily local reminder that encourages user engagement. A scheduled notification is configured to trigger once per day at approximately 6:00 PM, reminding users to open the app and get inspired with a new recipe idea for dinner. The notification system leverages Expo’s notification scheduling API, which allows the app to register notifications locally on the device without requiring a backend service. Additionally, the implementation includes user interaction handling, ensuring that when a user taps on a notification, the app navigates to the Home Screen (or another relevant page) to display new or featured recipes. Permissions for notifications are requested during the app’s initial launch, and scheduling is managed through an asynchronous setup using Expo’s `Notifications.scheduleNotificationAsync()` API.
+The app integrates Expo Notifications to provide a daily local reminder that encourages user engagement. A scheduled notification is configured to trigger once per day at 6:00 PM, reminding users to open the app and get inspired with a new recipe idea for dinner. The notification system leverages Expo’s notification scheduling API, which allows the app to register notifications locally on the device without requiring a backend service. Additionally, the implementation includes user interaction handling, ensuring that when a user taps on a notification, the app navigates to the Home Screen (or another relevant page) to display new or featured recipes. Permissions for notifications are requested during the app’s initial launch, and scheduling is managed through an asynchronous setup using Expo’s `Notifications.scheduleNotificationAsync()` API.
 
 #### Backend Integration
 
-The app integrates with external recipe backend APIs to provide users with a diverse collection of recipes from global databases, primarily through [TheMealDB](https://www.themealdb.com/api.php). This API delivers comprehensive recipe data, including category (e.g., Dessert), area (e.g., British), title (e.g., Apple Frangipan Tart), detailed cooking instructions, ingredient lists, and corresponding measurements. The backend responses are parsed and processed into a structured list of class-based recipe objects, ensuring consistent data handling across the app. These objects are rendered dynamically on the Dashboard (Home) Screen, allowing users to explore and interact with the curated recipe collection. The same shared list will also be leveraged on the User Collection Screen to retrieve and display any recipes the user has liked or saved.
+The app integrates with external recipe backend APIs to provide users with a diverse collection of recipes from global databases, primarily through [TheMealDB](https://www.themealdb.com/api.php). This API delivers comprehensive recipe data, including category (e.g., Dessert), area (e.g., British), title (e.g., Apple Frangipan Tart), detailed cooking instructions, ingredient lists, and corresponding measurements. The backend responses are parsed and processed into a structured list of class-based recipe objects, ensuring consistent data handling across the app. These objects are rendered dynamically on the Dashboard (Home) Screen, allowing users to explore and interact with the curated recipe collection. 
 
 #### Deployment with Expo EAS Build
-The app was built and deployed using Expo EAS Build, which provides a cloud-based continuous integration and delivery (CI/CD) workflow for React Native projects. During development, the app will be tested locally through Expo Go and on the iOS emulator to verify UI responsiveness and core functionality. Once stable, EAS Build was used to generate standalone `.ipa` and `.apk` files for testing on physical devices.
-The project will use EAS CLI commands such as `eas build --platform ios` for production builds, with configuration managed in the `eas.json` file. The final workable test builds will be attached as part of the final project submission. This approach ensures smooth testing, validation, and iteration before final submission.
+The app was built and deployed using Expo EAS Build, which provides a cloud-based continuous integration and delivery (CI/CD) workflow for React Native projects. The app was tested locally through Expo Go on both Android and iOS emulator to verify UI responsiveness and core functionality. Once stable, EAS Build was used to generate standalone `.apk` files for testing on physical devices.
+The project used EAS CLI command `eas build --platform android` for production builds, with configuration managed in the `eas.json` file. The final workable test build is attached below in the later sections.
 
 #### Advanced Features
 
@@ -127,11 +127,11 @@ Other than the core features provided by the Recipe Mobile App, there are two ad
 
 ##### User Authentication
 
-The app will implement OAuth-based social logins (e.g., Google, Facebook, GitHub) using Expo’s `AuthSession`, allowing users to sign in securely without creating a separate password. After authentication, the provider issues an access token that the app stores to identify the user and load their personal data, such as collections or liked recipes. Logging out invalidates the token and redirects back to the login page. This approach simplifies onboarding, increases security, and ensures users enjoy a personalized experience.
+The app implemented OAuth-based Google Authentication using `@react-native-google-signin/google-signin`, allowing users to sign in securely without creating a separate password. After authentication, the provider issues an access token that the app stores to identify the user and load their personal data, such as collections or liked recipes. Logging out invalidates the token and redirects back to the login page. This approach simplifies onboarding, increases security, and ensures users enjoy a personalized experience.
 
 ##### Social Sharing
 
-The Recipe Mobile App will also enable recipe sharing through Expo’s `Sharing` API, letting users send recipe details (title, instructions, and links) directly to social media or messaging apps. With one tap, users can share a favorite dish with friends or family, making cooking a social and collaborative activity. This feature not only improves user engagement but also helps promote the app organically as recipes are shared across different platforms.
+The Recipe Mobile App enables recipe sharing through the integration with `expo-sharing`, letting users share recipe details (title, instructions, and links) directly to social media or messaging apps. With one tap, users can share a favorite dish with friends or family, making cooking a social and collaborative activity. This feature not only improves user engagement but also helps promote the app organically as recipes are shared across different platforms.
 
 ## User Guide
 
@@ -141,7 +141,7 @@ This section provides step-by-step instructions for using each main feature of t
 
 #### 1. Login
 - Launch the app and you'll be presented with the Login Screen
-- Tap the "Sign in with Google" button (or other OAuth provider)
+- Tap the "Sign in with Google" button
 - Follow the OAuth authentication flow in your browser
 - Upon successful authentication, you'll be redirected to the Dashboard
 
@@ -151,7 +151,8 @@ This section provides step-by-step instructions for using each main feature of t
   - Recipe image (or default kitchen.jpg if unavailable)
   - Recipe title
   - Brief description
-- Scroll through the list to explore available recipes
+- Scroll through the list to explore available recipes or refresh to get a new list of random recipes
+- Sort, filter, and search recipes (Note: TheMealDB’s free API does not support combining sort, filter, and search in a single request, so user can only do it one time at a time)
 - Tap any recipe card to view its full details
 
 #### 3. View Recipe Details
@@ -162,7 +163,7 @@ This section provides step-by-step instructions for using each main feature of t
   - Category and cuisine area
   - Complete ingredient list with measurements
   - Step-by-step cooking instructions
-- **Like/Unlike**: Tap the heart icon in the top right
+- **Like/Unlike**: Tap the heart icon at the bottom of the screen
   - Outline heart: not liked
   - Red filled heart: liked (saved to your collection)
 - **Share**: Tap the share icon to send the recipe via messaging apps or social media
@@ -179,10 +180,7 @@ This section provides step-by-step instructions for using each main feature of t
   - **Steps**: List cooking steps, one per line (required)
 - The app validates your inputs in real-time and displays error messages if needed
 - Tap "Save Recipe" (disabled until all required fields are valid)
-- Upon successful save:
-  - Recipe is stored locally and automatically added to your Personal Collection
-  - You'll see a success screen with a large checkmark
-  - Tap the back arrow to create another recipe or navigate elsewhere
+- Upon successful save, recipe is stored locally and automatically added to your Personal Collection
 
 #### 5. Manage Your Personal Collection
 - From the Dashboard, tap the "Profile" tab in the bottom navigation
@@ -194,8 +192,8 @@ This section provides step-by-step instructions for using each main feature of t
 - Tap any recipe to view its details
 - To remove a recipe from your collection:
   - Open the recipe details
-  - Tap the heart icon to unlike it
-  - The recipe will immediately disappear from your collection
+  - Tap the heart icon at the bottom to unlike it
+  - The recipe would immediately disappear from your collection
 
 #### 6. Enable Daily Notifications
 - From the Dashboard, tap the "Profile" tab
@@ -203,15 +201,15 @@ This section provides step-by-step instructions for using each main feature of t
 - Toggle the "Daily recipe reminder (6:00 PM)" switch to ON
 - Grant notification permission when prompted by your device
 - The app will now send you a daily reminder at 6:00 PM
-- To test: tap the "Test notification" button to receive an immediate notification
+- To test: tap the "Test notification" button to receive an immediate notification (for demo purpose only; not shown in the final deployed version)
 - To disable: toggle the switch to OFF
 
 #### 7. View Your Profile
-- Tap the "Profile" tab to see your profile information:
-  - Profile picture, name, and email (from OAuth login)
-  - Total number of collected recipes
+- Tap the "Profile" tab to see your google profile information:
+  - Google profile photo, Google username, and gmail (from OAuth login)
+  - Total number of collected/created recipes
   - Notification settings
-- Tap "Logout" to sign out and return to the Login Screen
+- Tap "Sign Out" to end the session and return to the Login Screen
 
 ## Video Demo
 https://www.youtube.com/watch?v=6QOHw9LwyNU
@@ -248,36 +246,29 @@ cd recipe-app
 npm install
 ```
 
-Or if using yarn:
-
-```bash
-yarn install
-```
-
 ### Key Dependencies
 
 The project uses the following major dependencies (automatically installed via `npm install`):
 
+- **@react-native-google-signin/google-signin**: "^16.0.0" (OAuth)
+- **expo-sharing**: "~14.0.7"                              (Content Sharing)
+- **expo-notifications**: ~0.29.9                          (Notification)
+- **@react-native-async-storage/async-storage**: 2.0.0     (Persistence)
+- **expo-router**: ~4.0.9                                  (Routing)
 - **expo**: ~52.0.11
 - **react**: 18.3.1
+- **typescript**: ~5.3.3
 - **react-native**: 0.76.3
-- **expo-router**: ~4.0.9
-- **@react-native-async-storage/async-storage**: 2.0.0
-- **expo-notifications**: ~0.29.9
 - **expo-device**: ~6.0.2
 - **@expo/vector-icons**: ^14.0.4
-- **typescript**: ~5.3.3
+- ...
 
 ### Configure Environment
 
-1. **Set up OAuth credentials (optional, for login)**:
+- **Set up OAuth credentials (optional, for login)**:
    - If you want to test OAuth login, configure your Google OAuth credentials
    - Update the client IDs in `app.json` or environment variables as needed
    - For development, the app can run without OAuth if you bypass the login screen
-
-2. **Add local assets**:
-   - Ensure `assets/images/kitchen.jpg` exists for the default recipe image fallback
-   - The repository should include this asset; if missing, add any placeholder image
 
 ### Run the Development Server
 
