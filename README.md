@@ -346,7 +346,18 @@ Builds are managed via Expo Application Services (EAS). Ensure you have:
 - Configured `eas.json` (already included in the repository)
 
 ## Deployment Information
-https://expo.dev/artifacts/eas/hY8FY9dpPAB9yLvPuJsAJg.apk
+
+1. Click this link on your Android device:
+   **[https://expo.dev/artifacts/eas/hY8FY9dpPAB9yLvPuJsAJg.apk](https://expo.dev/artifacts/eas/hY8FY9dpPAB9yLvPuJsAJg.apk)**
+
+2. When prompted, choose **Download**.
+
+3. After downloading, open the APK from your **Downloads** or notification bar.
+
+4. If your phone asks for permission to install unknown apps, tap **Allow**.
+
+5. Tap **Install** to finish.
+
 
 ##  Individual Contributions
 
